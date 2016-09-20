@@ -5,8 +5,6 @@
  */
 package Entity;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
@@ -20,7 +18,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -37,21 +34,16 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Kateqoriya.findByAd", query = "SELECT k FROM Kateqoriya k WHERE k.ad = :ad")})
 public class Kateqoriya implements Serializable {
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idKateqoriya")
-    private Collection<Mallar> mallarCollection;
-
-    @Transient
-    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "idKateqoriya")
     private Integer idKateqoriya;
-    @Basic(optional = false)
     @Column(name = "Ad")
     private String ad;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idKateqoriya")
+    private Collection<Mallar> mallarCollection;
 
     public Kateqoriya() {
     }
@@ -60,19 +52,12 @@ public class Kateqoriya implements Serializable {
         this.idKateqoriya = idKateqoriya;
     }
 
-    public Kateqoriya(Integer idKateqoriya, String ad) {
-        this.idKateqoriya = idKateqoriya;
-        this.ad = ad;
-    }
-
     public Integer getIdKateqoriya() {
         return idKateqoriya;
     }
 
     public void setIdKateqoriya(Integer idKateqoriya) {
-        Integer oldIdKateqoriya = this.idKateqoriya;
         this.idKateqoriya = idKateqoriya;
-        changeSupport.firePropertyChange("idKateqoriya", oldIdKateqoriya, idKateqoriya);
     }
 
     public String getAd() {
@@ -80,9 +65,16 @@ public class Kateqoriya implements Serializable {
     }
 
     public void setAd(String ad) {
-        String oldAd = this.ad;
         this.ad = ad;
-        changeSupport.firePropertyChange("ad", oldAd, ad);
+    }
+
+    @XmlTransient
+    public Collection<Mallar> getMallarCollection() {
+        return mallarCollection;
+    }
+
+    public void setMallarCollection(Collection<Mallar> mallarCollection) {
+        this.mallarCollection = mallarCollection;
     }
 
     @Override
@@ -108,23 +100,6 @@ public class Kateqoriya implements Serializable {
     @Override
     public String toString() {
         return ad;
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.addPropertyChangeListener(listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.removePropertyChangeListener(listener);
-    }
-
-    @XmlTransient
-    public Collection<Mallar> getMallarCollection() {
-        return mallarCollection;
-    }
-
-    public void setMallarCollection(Collection<Mallar> mallarCollection) {
-        this.mallarCollection = mallarCollection;
     }
     
 }

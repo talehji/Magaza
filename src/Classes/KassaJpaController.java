@@ -3,19 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package EntityController;
+package Classes;
 
-import Claslar.exceptions.IllegalOrphanException;
-import Claslar.exceptions.NonexistentEntityException;
+import Entity.Satisnovu;
+import Entity.Satis;
 import Entity.Kassa;
+import Entity.Member;
+import Classes.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import Entity.Satisnovu;
-import Entity.Menber;
-import Entity.Satis;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -45,15 +44,15 @@ public class KassaJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Member idMember = kassa.getIdMember();
+            if (idMember != null) {
+                idMember = em.getReference(idMember.getClass(), idMember.getIdMember());
+                kassa.setIdMember(idMember);
+            }
             Satisnovu idSatisNovu = kassa.getIdSatisNovu();
             if (idSatisNovu != null) {
                 idSatisNovu = em.getReference(idSatisNovu.getClass(), idSatisNovu.getIdSatisNovu());
                 kassa.setIdSatisNovu(idSatisNovu);
-            }
-            Menber idMenber = kassa.getIdMenber();
-            if (idMenber != null) {
-                idMenber = em.getReference(idMenber.getClass(), idMenber.getIdMenber());
-                kassa.setIdMenber(idMenber);
             }
             Collection<Satis> attachedSatisCollection = new ArrayList<Satis>();
             for (Satis satisCollectionSatisToAttach : kassa.getSatisCollection()) {
@@ -62,13 +61,13 @@ public class KassaJpaController implements Serializable {
             }
             kassa.setSatisCollection(attachedSatisCollection);
             em.persist(kassa);
+            if (idMember != null) {
+                idMember.getKassaCollection().add(kassa);
+                idMember = em.merge(idMember);
+            }
             if (idSatisNovu != null) {
                 idSatisNovu.getKassaCollection().add(kassa);
                 idSatisNovu = em.merge(idSatisNovu);
-            }
-            if (idMenber != null) {
-                idMenber.getKassaCollection().add(kassa);
-                idMenber = em.merge(idMenber);
             }
             for (Satis satisCollectionSatis : kassa.getSatisCollection()) {
                 Kassa oldIdKassaOfSatisCollectionSatis = satisCollectionSatis.getIdKassa();
@@ -87,37 +86,25 @@ public class KassaJpaController implements Serializable {
         }
     }
 
-    public void edit(Kassa kassa) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void edit(Kassa kassa) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             Kassa persistentKassa = em.find(Kassa.class, kassa.getIdKassa());
+            Member idMemberOld = persistentKassa.getIdMember();
+            Member idMemberNew = kassa.getIdMember();
             Satisnovu idSatisNovuOld = persistentKassa.getIdSatisNovu();
             Satisnovu idSatisNovuNew = kassa.getIdSatisNovu();
-            Menber idMenberOld = persistentKassa.getIdMenber();
-            Menber idMenberNew = kassa.getIdMenber();
             Collection<Satis> satisCollectionOld = persistentKassa.getSatisCollection();
             Collection<Satis> satisCollectionNew = kassa.getSatisCollection();
-            List<String> illegalOrphanMessages = null;
-            for (Satis satisCollectionOldSatis : satisCollectionOld) {
-                if (!satisCollectionNew.contains(satisCollectionOldSatis)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain Satis " + satisCollectionOldSatis + " since its idKassa field is not nullable.");
-                }
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
+            if (idMemberNew != null) {
+                idMemberNew = em.getReference(idMemberNew.getClass(), idMemberNew.getIdMember());
+                kassa.setIdMember(idMemberNew);
             }
             if (idSatisNovuNew != null) {
                 idSatisNovuNew = em.getReference(idSatisNovuNew.getClass(), idSatisNovuNew.getIdSatisNovu());
                 kassa.setIdSatisNovu(idSatisNovuNew);
-            }
-            if (idMenberNew != null) {
-                idMenberNew = em.getReference(idMenberNew.getClass(), idMenberNew.getIdMenber());
-                kassa.setIdMenber(idMenberNew);
             }
             Collection<Satis> attachedSatisCollectionNew = new ArrayList<Satis>();
             for (Satis satisCollectionNewSatisToAttach : satisCollectionNew) {
@@ -127,6 +114,14 @@ public class KassaJpaController implements Serializable {
             satisCollectionNew = attachedSatisCollectionNew;
             kassa.setSatisCollection(satisCollectionNew);
             kassa = em.merge(kassa);
+            if (idMemberOld != null && !idMemberOld.equals(idMemberNew)) {
+                idMemberOld.getKassaCollection().remove(kassa);
+                idMemberOld = em.merge(idMemberOld);
+            }
+            if (idMemberNew != null && !idMemberNew.equals(idMemberOld)) {
+                idMemberNew.getKassaCollection().add(kassa);
+                idMemberNew = em.merge(idMemberNew);
+            }
             if (idSatisNovuOld != null && !idSatisNovuOld.equals(idSatisNovuNew)) {
                 idSatisNovuOld.getKassaCollection().remove(kassa);
                 idSatisNovuOld = em.merge(idSatisNovuOld);
@@ -135,13 +130,11 @@ public class KassaJpaController implements Serializable {
                 idSatisNovuNew.getKassaCollection().add(kassa);
                 idSatisNovuNew = em.merge(idSatisNovuNew);
             }
-            if (idMenberOld != null && !idMenberOld.equals(idMenberNew)) {
-                idMenberOld.getKassaCollection().remove(kassa);
-                idMenberOld = em.merge(idMenberOld);
-            }
-            if (idMenberNew != null && !idMenberNew.equals(idMenberOld)) {
-                idMenberNew.getKassaCollection().add(kassa);
-                idMenberNew = em.merge(idMenberNew);
+            for (Satis satisCollectionOldSatis : satisCollectionOld) {
+                if (!satisCollectionNew.contains(satisCollectionOldSatis)) {
+                    satisCollectionOldSatis.setIdKassa(null);
+                    satisCollectionOldSatis = em.merge(satisCollectionOldSatis);
+                }
             }
             for (Satis satisCollectionNewSatis : satisCollectionNew) {
                 if (!satisCollectionOld.contains(satisCollectionNewSatis)) {
@@ -171,7 +164,7 @@ public class KassaJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
+    public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -183,26 +176,20 @@ public class KassaJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The kassa with id " + id + " no longer exists.", enfe);
             }
-            List<String> illegalOrphanMessages = null;
-            Collection<Satis> satisCollectionOrphanCheck = kassa.getSatisCollection();
-            for (Satis satisCollectionOrphanCheckSatis : satisCollectionOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Kassa (" + kassa + ") cannot be destroyed since the Satis " + satisCollectionOrphanCheckSatis + " in its satisCollection field has a non-nullable idKassa field.");
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
+            Member idMember = kassa.getIdMember();
+            if (idMember != null) {
+                idMember.getKassaCollection().remove(kassa);
+                idMember = em.merge(idMember);
             }
             Satisnovu idSatisNovu = kassa.getIdSatisNovu();
             if (idSatisNovu != null) {
                 idSatisNovu.getKassaCollection().remove(kassa);
                 idSatisNovu = em.merge(idSatisNovu);
             }
-            Menber idMenber = kassa.getIdMenber();
-            if (idMenber != null) {
-                idMenber.getKassaCollection().remove(kassa);
-                idMenber = em.merge(idMenber);
+            Collection<Satis> satisCollection = kassa.getSatisCollection();
+            for (Satis satisCollectionSatis : satisCollection) {
+                satisCollectionSatis.setIdKassa(null);
+                satisCollectionSatis = em.merge(satisCollectionSatis);
             }
             em.remove(kassa);
             em.getTransaction().commit();

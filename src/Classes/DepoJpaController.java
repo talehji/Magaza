@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package EntityController;
+package Classes;
 
-import Claslar.exceptions.NonexistentEntityException;
 import Entity.Depo;
+import Entity.Mallar;
+import Classes.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -36,7 +37,16 @@ public class DepoJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Mallar idMallar = depo.getIdMallar();
+            if (idMallar != null) {
+                idMallar = em.getReference(idMallar.getClass(), idMallar.getIdMallar());
+                depo.setIdMallar(idMallar);
+            }
             em.persist(depo);
+            if (idMallar != null) {
+                idMallar.getDepoCollection().add(depo);
+                idMallar = em.merge(idMallar);
+            }
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -50,7 +60,22 @@ public class DepoJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Depo persistentDepo = em.find(Depo.class, depo.getIdDepo());
+            Mallar idMallarOld = persistentDepo.getIdMallar();
+            Mallar idMallarNew = depo.getIdMallar();
+            if (idMallarNew != null) {
+                idMallarNew = em.getReference(idMallarNew.getClass(), idMallarNew.getIdMallar());
+                depo.setIdMallar(idMallarNew);
+            }
             depo = em.merge(depo);
+            if (idMallarOld != null && !idMallarOld.equals(idMallarNew)) {
+                idMallarOld.getDepoCollection().remove(depo);
+                idMallarOld = em.merge(idMallarOld);
+            }
+            if (idMallarNew != null && !idMallarNew.equals(idMallarOld)) {
+                idMallarNew.getDepoCollection().add(depo);
+                idMallarNew = em.merge(idMallarNew);
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -79,6 +104,11 @@ public class DepoJpaController implements Serializable {
                 depo.getIdDepo();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The depo with id " + id + " no longer exists.", enfe);
+            }
+            Mallar idMallar = depo.getIdMallar();
+            if (idMallar != null) {
+                idMallar.getDepoCollection().remove(depo);
+                idMallar = em.merge(idMallar);
             }
             em.remove(depo);
             em.getTransaction().commit();

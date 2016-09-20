@@ -5,13 +5,10 @@
  */
 package Entity;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,7 +22,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -39,13 +35,10 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Kassa.findAll", query = "SELECT k FROM Kassa k"),
     @NamedQuery(name = "Kassa.findByIdKassa", query = "SELECT k FROM Kassa k WHERE k.idKassa = :idKassa"),
-    @NamedQuery(name = "Kassa.findByMedaxil", query = "SELECT k FROM Kassa k WHERE k.medaxil = :medaxil"),
     @NamedQuery(name = "Kassa.findByBorc", query = "SELECT k FROM Kassa k WHERE k.borc = :borc"),
+    @NamedQuery(name = "Kassa.findByMedaxil", query = "SELECT k FROM Kassa k WHERE k.medaxil = :medaxil"),
     @NamedQuery(name = "Kassa.findByTarix", query = "SELECT k FROM Kassa k WHERE k.tarix = :tarix")})
 public class Kassa implements Serializable {
-
-    @Transient
-    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -53,24 +46,22 @@ public class Kassa implements Serializable {
     @Basic(optional = false)
     @Column(name = "idKassa")
     private Integer idKassa;
-    @Basic(optional = false)
-    @Column(name = "Medaxil")
-    private String medaxil;
-    @Basic(optional = false)
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "Borc")
-    private String borc;
-    @Basic(optional = false)
+    private Double borc;
+    @Column(name = "Medaxil")
+    private Double medaxil;
     @Column(name = "Tarix")
     @Temporal(TemporalType.TIMESTAMP)
     private Date tarix;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idKassa")
+    @OneToMany(mappedBy = "idKassa")
     private Collection<Satis> satisCollection;
+    @JoinColumn(name = "idMember", referencedColumnName = "idMember")
+    @ManyToOne
+    private Member idMember;
     @JoinColumn(name = "idSatisNovu", referencedColumnName = "idSatisNovu")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Satisnovu idSatisNovu;
-    @JoinColumn(name = "idMenber", referencedColumnName = "idMenber")
-    @ManyToOne(optional = false)
-    private Menber idMenber;
 
     public Kassa() {
     }
@@ -79,41 +70,28 @@ public class Kassa implements Serializable {
         this.idKassa = idKassa;
     }
 
-    public Kassa(Integer idKassa, String medaxil, String borc, Date tarix) {
-        this.idKassa = idKassa;
-        this.medaxil = medaxil;
-        this.borc = borc;
-        this.tarix = tarix;
-    }
-
     public Integer getIdKassa() {
         return idKassa;
     }
 
     public void setIdKassa(Integer idKassa) {
-        Integer oldIdKassa = this.idKassa;
         this.idKassa = idKassa;
-        changeSupport.firePropertyChange("idKassa", oldIdKassa, idKassa);
     }
 
-    public String getMedaxil() {
-        return medaxil;
-    }
-
-    public void setMedaxil(String medaxil) {
-        String oldMedaxil = this.medaxil;
-        this.medaxil = medaxil;
-        changeSupport.firePropertyChange("medaxil", oldMedaxil, medaxil);
-    }
-
-    public String getBorc() {
+    public Double getBorc() {
         return borc;
     }
 
-    public void setBorc(String borc) {
-        String oldBorc = this.borc;
+    public void setBorc(Double borc) {
         this.borc = borc;
-        changeSupport.firePropertyChange("borc", oldBorc, borc);
+    }
+
+    public Double getMedaxil() {
+        return medaxil;
+    }
+
+    public void setMedaxil(Double medaxil) {
+        this.medaxil = medaxil;
     }
 
     public Date getTarix() {
@@ -121,9 +99,7 @@ public class Kassa implements Serializable {
     }
 
     public void setTarix(Date tarix) {
-        Date oldTarix = this.tarix;
         this.tarix = tarix;
-        changeSupport.firePropertyChange("tarix", oldTarix, tarix);
     }
 
     @XmlTransient
@@ -135,24 +111,20 @@ public class Kassa implements Serializable {
         this.satisCollection = satisCollection;
     }
 
+    public Member getIdMember() {
+        return idMember;
+    }
+
+    public void setIdMember(Member idMember) {
+        this.idMember = idMember;
+    }
+
     public Satisnovu getIdSatisNovu() {
         return idSatisNovu;
     }
 
     public void setIdSatisNovu(Satisnovu idSatisNovu) {
-        Satisnovu oldIdSatisNovu = this.idSatisNovu;
         this.idSatisNovu = idSatisNovu;
-        changeSupport.firePropertyChange("idSatisNovu", oldIdSatisNovu, idSatisNovu);
-    }
-
-    public Menber getIdMenber() {
-        return idMenber;
-    }
-
-    public void setIdMenber(Menber idMenber) {
-        Menber oldIdMenber = this.idMenber;
-        this.idMenber = idMenber;
-        changeSupport.firePropertyChange("idMenber", oldIdMenber, idMenber);
     }
 
     @Override
@@ -177,15 +149,7 @@ public class Kassa implements Serializable {
 
     @Override
     public String toString() {
-        return "Connection.Kassa[ idKassa=" + idKassa + " ]";
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.addPropertyChangeListener(listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.removePropertyChangeListener(listener);
+        return "Classes.Kassa[ idKassa=" + idKassa + " ]";
     }
     
 }

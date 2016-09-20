@@ -5,13 +5,11 @@
  */
 package Screens;
 
-import Classes.Baza;
-import Entity.Menber;
+import Entity.Member;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -23,12 +21,16 @@ public class ScreenLogin extends javax.swing.JDialog {
 
     /**
      * Creates new form ScreenLogin
+     *
+     * @param parent
+     * @param modal
      */
     public ScreenLogin(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("MagazaPU");
         em = emf.createEntityManager();
+        jPasswordField1.requestFocusInWindow();
     }
 
     private void Login() {
@@ -38,37 +40,32 @@ public class ScreenLogin extends javax.swing.JDialog {
 //                    .setParameter("idMenber", em.find(Menber.class, jComboBox1.getSelectedIndex()+1))
 //                    .getSingleResult();
 //           System.out.println(m.getAdSoyad());
+        List<Member> ListOfMenber = em.createNamedQuery("Member.findAll", Member.class).getResultList();
 
-            List<Menber> ListOfMenber = em.createNamedQuery("Menber.findAll", Menber.class).getResultList();
+        for (Member member : ListOfMenber) {
 
-            for (Menber menber : ListOfMenber) {
-
-                if (menber.getPassword().equals(jPasswordField1.getText()) && menber.getIdMenber().equals(jComboBox1.getSelectedIndex() + 1)) {
-                    if (jComboBox1.getSelectedIndex() == 0) {
-                        ScreenAdmin d = new ScreenAdmin();
-                        this.dispose();
-                        d.setVisible(rootPaneCheckingEnabled);
-                    } else {
-                        System.out.println(jComboBox1.getSelectedItem());
-                        ScreenSatici d = new ScreenSatici(null, rootPaneCheckingEnabled, menber);
-                        d.jLabelIshchiAdi.setText((String) "" + jComboBox1.getSelectedItem());
-                        this.dispose();
-                        d.setVisible(rootPaneCheckingEnabled);
-                    }
+            if (member.getPassword().equals(jPasswordField1.getText()) && member.getIdMember().equals(jComboBox1.getSelectedIndex() + 1)) {
+                if (jComboBox1.getSelectedIndex() == 0) {
+                    ScreenAdmin d = new ScreenAdmin();
+                    this.dispose();
+                    d.setVisible(rootPaneCheckingEnabled);
+                } else {
+                    ScreenSatici d = new ScreenSatici(null, rootPaneCheckingEnabled, member);
+                    this.dispose();
+                    d.setVisible(rootPaneCheckingEnabled);
                 }
             }
         }
+    }
 
-        @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         MagazaPUEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("MagazaPU").createEntityManager();
-        menberQuery = java.beans.Beans.isDesignTime() ? null : MagazaPUEntityManager.createQuery("SELECT m FROM Menber m");
-        menberList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : menberQuery.getResultList();
-        menberQuery1 = java.beans.Beans.isDesignTime() ? null : MagazaPUEntityManager.createQuery("SELECT m FROM Menber m");
-        menberList1 = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : menberQuery1.getResultList();
+        memberQuery = java.beans.Beans.isDesignTime() ? null : MagazaPUEntityManager.createQuery("SELECT m FROM Member m");
+        memberList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : memberQuery.getResultList();
         jButton2 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
@@ -102,7 +99,7 @@ public class ScreenLogin extends javax.swing.JDialog {
 
         jComboBox1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
-        org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, menberList1, jComboBox1);
+        org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, memberList, jComboBox1);
         bindingGroup.addBinding(jComboBoxBinding);
 
         jPasswordField1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -224,10 +221,8 @@ public class ScreenLogin extends javax.swing.JDialog {
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPasswordField jPasswordField1;
-    private java.util.List<Entity.Menber> menberList;
-    private java.util.List<Entity.Menber> menberList1;
-    private javax.persistence.Query menberQuery;
-    private javax.persistence.Query menberQuery1;
+    private java.util.List<Entity.Member> memberList;
+    private javax.persistence.Query memberQuery;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,8 +5,6 @@
  */
 package Entity;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -19,7 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -31,12 +28,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Satis.findAll", query = "SELECT s FROM Satis s"),
-    @NamedQuery(name = "Satis.findByIdMallar", query = "SELECT s FROM Satis s WHERE s.idMallar = :idMallar"),
     @NamedQuery(name = "Satis.findByIdSatis", query = "SELECT s FROM Satis s WHERE s.idSatis = :idSatis")})
 public class Satis implements Serializable {
-
-    @Transient
-    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -44,14 +37,14 @@ public class Satis implements Serializable {
     @Basic(optional = false)
     @Column(name = "idSatis")
     private Integer idSatis;
-    @JoinColumn(name = "idMallar", referencedColumnName = "idMallar")
-    @ManyToOne(optional = false)
-    private Mallar idMallar;
     @JoinColumn(name = "idKassa", referencedColumnName = "idKassa")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Kassa idKassa;
+    @JoinColumn(name = "idMallar", referencedColumnName = "idMallar")
+    @ManyToOne
+    private Mallar idMallar;
     @JoinColumn(name = "idMusteri", referencedColumnName = "idMusteri")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Musteri idMusteri;
 
     public Satis() {
@@ -66,19 +59,7 @@ public class Satis implements Serializable {
     }
 
     public void setIdSatis(Integer idSatis) {
-        Integer oldIdSatis = this.idSatis;
         this.idSatis = idSatis;
-        changeSupport.firePropertyChange("idSatis", oldIdSatis, idSatis);
-    }
-
-    public Mallar getIdMallar() {
-        return idMallar;
-    }
-
-    public void setIdMallar(Mallar idMallar) {
-        Mallar oldIdMallar = this.idMallar;
-        this.idMallar = idMallar;
-        changeSupport.firePropertyChange("idMallar", oldIdMallar, idMallar);
     }
 
     public Kassa getIdKassa() {
@@ -86,9 +67,15 @@ public class Satis implements Serializable {
     }
 
     public void setIdKassa(Kassa idKassa) {
-        Kassa oldIdKassa = this.idKassa;
         this.idKassa = idKassa;
-        changeSupport.firePropertyChange("idKassa", oldIdKassa, idKassa);
+    }
+
+    public Mallar getIdMallar() {
+        return idMallar;
+    }
+
+    public void setIdMallar(Mallar idMallar) {
+        this.idMallar = idMallar;
     }
 
     public Musteri getIdMusteri() {
@@ -96,9 +83,7 @@ public class Satis implements Serializable {
     }
 
     public void setIdMusteri(Musteri idMusteri) {
-        Musteri oldIdMusteri = this.idMusteri;
         this.idMusteri = idMusteri;
-        changeSupport.firePropertyChange("idMusteri", oldIdMusteri, idMusteri);
     }
 
     @Override
@@ -123,15 +108,7 @@ public class Satis implements Serializable {
 
     @Override
     public String toString() {
-        return "Connection.Satis[ idSatis=" + idSatis + " ]";
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.addPropertyChangeListener(listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.removePropertyChangeListener(listener);
+        return "Classes.Satis[ idSatis=" + idSatis + " ]";
     }
     
 }

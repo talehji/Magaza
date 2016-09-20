@@ -1,4 +1,4 @@
-package Claslar.exceptions;
+package Classes.exceptions;
 
 import java.util.ArrayList;
 import java.util.List;

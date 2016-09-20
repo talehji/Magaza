@@ -3,18 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package EntityController;
+package Classes;
 
-import Claslar.exceptions.NonexistentEntityException;
 import Entity.Musteri;
+import Entity.Satis;
+import Classes.exceptions.NonexistentEntityException;
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 /**
  *
@@ -32,11 +35,29 @@ public class MusteriJpaController implements Serializable {
     }
 
     public void create(Musteri musteri) {
+        if (musteri.getSatisCollection() == null) {
+            musteri.setSatisCollection(new ArrayList<Satis>());
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Collection<Satis> attachedSatisCollection = new ArrayList<Satis>();
+            for (Satis satisCollectionSatisToAttach : musteri.getSatisCollection()) {
+                satisCollectionSatisToAttach = em.getReference(satisCollectionSatisToAttach.getClass(), satisCollectionSatisToAttach.getIdSatis());
+                attachedSatisCollection.add(satisCollectionSatisToAttach);
+            }
+            musteri.setSatisCollection(attachedSatisCollection);
             em.persist(musteri);
+            for (Satis satisCollectionSatis : musteri.getSatisCollection()) {
+                Musteri oldIdMusteriOfSatisCollectionSatis = satisCollectionSatis.getIdMusteri();
+                satisCollectionSatis.setIdMusteri(musteri);
+                satisCollectionSatis = em.merge(satisCollectionSatis);
+                if (oldIdMusteriOfSatisCollectionSatis != null) {
+                    oldIdMusteriOfSatisCollectionSatis.getSatisCollection().remove(satisCollectionSatis);
+                    oldIdMusteriOfSatisCollectionSatis = em.merge(oldIdMusteriOfSatisCollectionSatis);
+                }
+            }
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -50,7 +71,34 @@ public class MusteriJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Musteri persistentMusteri = em.find(Musteri.class, musteri.getIdMusteri());
+            Collection<Satis> satisCollectionOld = persistentMusteri.getSatisCollection();
+            Collection<Satis> satisCollectionNew = musteri.getSatisCollection();
+            Collection<Satis> attachedSatisCollectionNew = new ArrayList<Satis>();
+            for (Satis satisCollectionNewSatisToAttach : satisCollectionNew) {
+                satisCollectionNewSatisToAttach = em.getReference(satisCollectionNewSatisToAttach.getClass(), satisCollectionNewSatisToAttach.getIdSatis());
+                attachedSatisCollectionNew.add(satisCollectionNewSatisToAttach);
+            }
+            satisCollectionNew = attachedSatisCollectionNew;
+            musteri.setSatisCollection(satisCollectionNew);
             musteri = em.merge(musteri);
+            for (Satis satisCollectionOldSatis : satisCollectionOld) {
+                if (!satisCollectionNew.contains(satisCollectionOldSatis)) {
+                    satisCollectionOldSatis.setIdMusteri(null);
+                    satisCollectionOldSatis = em.merge(satisCollectionOldSatis);
+                }
+            }
+            for (Satis satisCollectionNewSatis : satisCollectionNew) {
+                if (!satisCollectionOld.contains(satisCollectionNewSatis)) {
+                    Musteri oldIdMusteriOfSatisCollectionNewSatis = satisCollectionNewSatis.getIdMusteri();
+                    satisCollectionNewSatis.setIdMusteri(musteri);
+                    satisCollectionNewSatis = em.merge(satisCollectionNewSatis);
+                    if (oldIdMusteriOfSatisCollectionNewSatis != null && !oldIdMusteriOfSatisCollectionNewSatis.equals(musteri)) {
+                        oldIdMusteriOfSatisCollectionNewSatis.getSatisCollection().remove(satisCollectionNewSatis);
+                        oldIdMusteriOfSatisCollectionNewSatis = em.merge(oldIdMusteriOfSatisCollectionNewSatis);
+                    }
+                }
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -79,6 +127,11 @@ public class MusteriJpaController implements Serializable {
                 musteri.getIdMusteri();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The musteri with id " + id + " no longer exists.", enfe);
+            }
+            Collection<Satis> satisCollection = musteri.getSatisCollection();
+            for (Satis satisCollectionSatis : satisCollection) {
+                satisCollectionSatis.setIdMusteri(null);
+                satisCollectionSatis = em.merge(satisCollectionSatis);
             }
             em.remove(musteri);
             em.getTransaction().commit();

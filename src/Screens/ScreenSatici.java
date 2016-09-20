@@ -5,11 +5,11 @@
  */
 package Screens;
 
-import Classes.Baza;
-import Classes.TableAdd;
+import Hands.Baza;
+import Hands.TableAdd;
 import Entity.Kassa;
 import Entity.Mallar;
-import Entity.Menber;
+import Entity.Member;
 import Entity.Musteri;
 import Entity.Satis;
 import java.awt.Toolkit;
@@ -27,13 +27,13 @@ public class ScreenSatici extends javax.swing.JDialog {
 
     private final EntityManager em;
     private List<TableAdd> listofbaza;
-    private final Menber menber;
+    private final Member member;
 
-    public ScreenSatici(java.awt.Frame parent, boolean modal, Menber menber) {
+    public ScreenSatici(java.awt.Frame parent, boolean modal, Member member) {
         super(parent, modal);
         initComponents();
-        this.menber = menber;
-        jLabelIshchiAdi.setText(menber.getAd() + " " + menber.getSoyad());
+        this.member = member;
+        jLabelIshchiAdi.setText(member.getAd() + " " + member.getSoyad());
 //        this.setExtendedState(ScreenSatici.MAXIMIZED_BOTH);
         Toolkit d = Toolkit.getDefaultToolkit();
         int x = (int) d.getScreenSize().getWidth();
@@ -199,7 +199,7 @@ public class ScreenSatici extends javax.swing.JDialog {
     private void jTextFieldBarkodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldBarkodActionPerformed
         ScreenMusteri r = new ScreenMusteri(null, rootPaneCheckingEnabled);
         if (jTextFieldBarkod.getText().equals("")) {
-            ScreenChekout d = new ScreenChekout(null, rootPaneCheckingEnabled, menber);
+            ScreenChekout d = new ScreenChekout(null, rootPaneCheckingEnabled, member);
             this.setAlwaysOnTop(false);
 
             d.setVisible(rootPaneCheckingEnabled);
@@ -227,6 +227,7 @@ public class ScreenSatici extends javax.swing.JDialog {
                         Entity.Satis f = new Satis(0);
                         f.setIdKassa(em.find(Kassa.class, a));
                         f.setIdMallar(em.find(Mallar.class, t.id));
+                        System.out.println(r.selectedMushteri.getIdMusteri());
                         f.setIdMusteri(em.find(Musteri.class, r.selectedMushteri));
                         System.out.println("alindi nisye");
                         em.persist(f);
@@ -245,7 +246,7 @@ public class ScreenSatici extends javax.swing.JDialog {
             List< Mallar> ListOfMallar = em.createNamedQuery("Mallar.findAll", Mallar.class).getResultList();
             for (Mallar mallar : ListOfMallar) {
                 if (mallar.getBarkod().equals(jTextFieldBarkod.getText())) {
-                    Baza.ListOfTable.add(new TableAdd(mallar.getIdMallar(), mallar.getAd(), mallar.getQiymeti()));
+                    Baza.ListOfTable.add(new TableAdd(mallar.getIdMallar(), mallar.getAd(), mallar.getSatisQiymeti()));
                 }
             }
             int i;

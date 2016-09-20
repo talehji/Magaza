@@ -6,6 +6,7 @@
 package Screens;
 
 import Entity.Kateqoriya;
+import Entity.Mallar;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -57,9 +58,11 @@ public class ScreenMalDaxilET extends javax.swing.JDialog {
         jLabel4 = new javax.swing.JLabel();
         jTextFieldCekisi = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextFieldQiymeti = new javax.swing.JTextField();
+        jTextFieldSatisQiymeti = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jTextFieldAlisQiymeti = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -88,9 +91,9 @@ public class ScreenMalDaxilET extends javax.swing.JDialog {
         jTextFieldCekisi.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel5.setText("Qiyməti");
+        jLabel5.setText("Satış qiyməti");
 
-        jTextFieldQiymeti.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jTextFieldSatisQiymeti.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         jButton1.setText("Yadda saxla");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -106,6 +109,11 @@ public class ScreenMalDaxilET extends javax.swing.JDialog {
             }
         });
 
+        jTextFieldAlisQiymeti.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel6.setText("Alış qiyməti");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -114,23 +122,25 @@ public class ScreenMalDaxilET extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 198, Short.MAX_VALUE)
+                        .addComponent(jButton2))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3)
                             .addComponent(jLabel4)
+                            .addComponent(jLabel6)
                             .addComponent(jLabel5))
-                        .addGap(32, 32, 32)
+                        .addGap(22, 22, 22)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldSatisQiymeti)
+                            .addComponent(jTextFieldAlisQiymeti)
                             .addComponent(jTextFieldAd)
-                            .addComponent(jComboBoxKateqoriya, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jComboBoxKateqoriya, 0, 260, Short.MAX_VALUE)
                             .addComponent(jTextFieldCekisi)
-                            .addComponent(jTextFieldQiymeti)
-                            .addComponent(jTextFieldBarkod)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 198, Short.MAX_VALUE)
-                        .addComponent(jButton2)))
+                            .addComponent(jTextFieldBarkod))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -154,13 +164,17 @@ public class ScreenMalDaxilET extends javax.swing.JDialog {
                     .addComponent(jTextFieldCekisi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jTextFieldAlisQiymeti, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextFieldQiymeti, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldSatisQiymeti, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         bindingGroup.bind();
@@ -174,7 +188,7 @@ public class ScreenMalDaxilET extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Entity.Mallar k = new Entity.Mallar(0, jTextFieldAd.getText(), jTextFieldCekisi.getText(), Double.parseDouble(jTextFieldQiymeti.getText()), jTextFieldBarkod.getText(), "1");
+        Entity.Mallar k = new Mallar(0, jTextFieldAd.getText(), jTextFieldBarkod.getText(), jTextFieldCekisi.getText(), Double.parseDouble(jTextFieldAlisQiymeti.getText()), Double.parseDouble(jTextFieldSatisQiymeti.getText()), "1");
         k.setIdKateqoriya((Kateqoriya)jComboBoxKateqoriya.getSelectedItem());
  
         em.persist(k);
@@ -183,7 +197,7 @@ public class ScreenMalDaxilET extends javax.swing.JDialog {
         jTextFieldAd.setText(null);
         jTextFieldBarkod.setText(null);
         jTextFieldCekisi.setText(null);
-        jTextFieldQiymeti.setText(null);
+        jTextFieldSatisQiymeti.setText(null);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -236,10 +250,12 @@ public class ScreenMalDaxilET extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JTextField jTextFieldAd;
+    private javax.swing.JTextField jTextFieldAlisQiymeti;
     private javax.swing.JTextField jTextFieldBarkod;
     private javax.swing.JTextField jTextFieldCekisi;
-    private javax.swing.JTextField jTextFieldQiymeti;
+    private javax.swing.JTextField jTextFieldSatisQiymeti;
     private java.util.List<Entity.Kateqoriya> kateqoriyaList;
     private java.util.List<Entity.Kateqoriya> kateqoriyaList1;
     private java.util.List<Entity.Kateqoriya> kateqoriyaList2;

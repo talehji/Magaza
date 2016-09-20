@@ -3,21 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package EntityController;
+package Classes;
 
-import Claslar.exceptions.NonexistentEntityException;
+import Entity.Musteri;
+import Entity.Kassa;
+import Entity.Satis;
+import Entity.Mallar;
+import Classes.exceptions.NonexistentEntityException;
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import Entity.Mallar;
-import Entity.Kassa;
-import Entity.Musteri;
-import Entity.Satis;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 
 /**
  *
@@ -39,15 +39,15 @@ public class SatisJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Mallar idMallar = satis.getIdMallar();
-            if (idMallar != null) {
-                idMallar = em.getReference(idMallar.getClass(), idMallar.getIdMallar());
-                satis.setIdMallar(idMallar);
-            }
             Kassa idKassa = satis.getIdKassa();
             if (idKassa != null) {
                 idKassa = em.getReference(idKassa.getClass(), idKassa.getIdKassa());
                 satis.setIdKassa(idKassa);
+            }
+            Mallar idMallar = satis.getIdMallar();
+            if (idMallar != null) {
+                idMallar = em.getReference(idMallar.getClass(), idMallar.getIdMallar());
+                satis.setIdMallar(idMallar);
             }
             Musteri idMusteri = satis.getIdMusteri();
             if (idMusteri != null) {
@@ -55,13 +55,13 @@ public class SatisJpaController implements Serializable {
                 satis.setIdMusteri(idMusteri);
             }
             em.persist(satis);
-            if (idMallar != null) {
-                idMallar.getSatisCollection().add(satis);
-                idMallar = em.merge(idMallar);
-            }
             if (idKassa != null) {
                 idKassa.getSatisCollection().add(satis);
                 idKassa = em.merge(idKassa);
+            }
+            if (idMallar != null) {
+                idMallar.getSatisCollection().add(satis);
+                idMallar = em.merge(idMallar);
             }
             if (idMusteri != null) {
                 idMusteri.getSatisCollection().add(satis);
@@ -81,33 +81,25 @@ public class SatisJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Satis persistentSatis = em.find(Satis.class, satis.getIdSatis());
-            Mallar idMallarOld = persistentSatis.getIdMallar();
-            Mallar idMallarNew = satis.getIdMallar();
             Kassa idKassaOld = persistentSatis.getIdKassa();
             Kassa idKassaNew = satis.getIdKassa();
+            Mallar idMallarOld = persistentSatis.getIdMallar();
+            Mallar idMallarNew = satis.getIdMallar();
             Musteri idMusteriOld = persistentSatis.getIdMusteri();
             Musteri idMusteriNew = satis.getIdMusteri();
-            if (idMallarNew != null) {
-                idMallarNew = em.getReference(idMallarNew.getClass(), idMallarNew.getIdMallar());
-                satis.setIdMallar(idMallarNew);
-            }
             if (idKassaNew != null) {
                 idKassaNew = em.getReference(idKassaNew.getClass(), idKassaNew.getIdKassa());
                 satis.setIdKassa(idKassaNew);
+            }
+            if (idMallarNew != null) {
+                idMallarNew = em.getReference(idMallarNew.getClass(), idMallarNew.getIdMallar());
+                satis.setIdMallar(idMallarNew);
             }
             if (idMusteriNew != null) {
                 idMusteriNew = em.getReference(idMusteriNew.getClass(), idMusteriNew.getIdMusteri());
                 satis.setIdMusteri(idMusteriNew);
             }
             satis = em.merge(satis);
-            if (idMallarOld != null && !idMallarOld.equals(idMallarNew)) {
-                idMallarOld.getSatisCollection().remove(satis);
-                idMallarOld = em.merge(idMallarOld);
-            }
-            if (idMallarNew != null && !idMallarNew.equals(idMallarOld)) {
-                idMallarNew.getSatisCollection().add(satis);
-                idMallarNew = em.merge(idMallarNew);
-            }
             if (idKassaOld != null && !idKassaOld.equals(idKassaNew)) {
                 idKassaOld.getSatisCollection().remove(satis);
                 idKassaOld = em.merge(idKassaOld);
@@ -115,6 +107,14 @@ public class SatisJpaController implements Serializable {
             if (idKassaNew != null && !idKassaNew.equals(idKassaOld)) {
                 idKassaNew.getSatisCollection().add(satis);
                 idKassaNew = em.merge(idKassaNew);
+            }
+            if (idMallarOld != null && !idMallarOld.equals(idMallarNew)) {
+                idMallarOld.getSatisCollection().remove(satis);
+                idMallarOld = em.merge(idMallarOld);
+            }
+            if (idMallarNew != null && !idMallarNew.equals(idMallarOld)) {
+                idMallarNew.getSatisCollection().add(satis);
+                idMallarNew = em.merge(idMallarNew);
             }
             if (idMusteriOld != null && !idMusteriOld.equals(idMusteriNew)) {
                 idMusteriOld.getSatisCollection().remove(satis);
@@ -153,15 +153,15 @@ public class SatisJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The satis with id " + id + " no longer exists.", enfe);
             }
-            Mallar idMallar = satis.getIdMallar();
-            if (idMallar != null) {
-                idMallar.getSatisCollection().remove(satis);
-                idMallar = em.merge(idMallar);
-            }
             Kassa idKassa = satis.getIdKassa();
             if (idKassa != null) {
                 idKassa.getSatisCollection().remove(satis);
                 idKassa = em.merge(idKassa);
+            }
+            Mallar idMallar = satis.getIdMallar();
+            if (idMallar != null) {
+                idMallar.getSatisCollection().remove(satis);
+                idMallar = em.merge(idMallar);
             }
             Musteri idMusteri = satis.getIdMusteri();
             if (idMusteri != null) {

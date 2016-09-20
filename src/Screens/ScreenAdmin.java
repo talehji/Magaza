@@ -8,10 +8,8 @@ package Screens;
 import Entity.Depo;
 import Entity.Kassa;
 import Entity.Mallar;
-import Entity.Satis;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -33,6 +31,7 @@ public class ScreenAdmin extends javax.swing.JFrame {
      */
     public ScreenAdmin() {
         initComponents();
+        this.setExtendedState(ScreenAdmin.MAXIMIZED_BOTH);
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("MagazaPU");
         em = emf.createEntityManager();
 //        Object a = em.createQuery("SELECT k.Borc, s.idSatis from Satis s inner join Kassa k on k.idKassa=s.idKassa", Object.class)
@@ -56,7 +55,8 @@ public class ScreenAdmin extends javax.swing.JFrame {
         tmodel.addColumn("Kateqoriya");
         tmodel.addColumn("Ad");
         tmodel.addColumn("Çəkisi");
-        tmodel.addColumn("Qiyməti");
+        tmodel.addColumn("Alış Qiyməti");
+        tmodel.addColumn("Satış Qiyməti");
 
         jTableMallar.setModel(tmodel);
 
@@ -69,7 +69,8 @@ public class ScreenAdmin extends javax.swing.JFrame {
                 b.getIdKateqoriya().getAd(),
                 b.getAd(),
                 b.getCekisi(),
-                b.getQiymeti()
+                b.getAlisQiymeti(),
+                b.getSatisQiymeti()
             });
         }
     }
@@ -151,7 +152,7 @@ public class ScreenAdmin extends javax.swing.JFrame {
                 b.getBorc(),
                 t.format(b.getTarix()),
                 s.format(b.getTarix()),
-                b.getIdMenber().getAdSoyad()
+                b.getIdMember().getAdSoyad()
             });
         }
 
@@ -417,7 +418,7 @@ public class ScreenAdmin extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jLabelUmumiGelir))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -442,9 +443,9 @@ public class ScreenAdmin extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 508, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 508, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -482,8 +483,8 @@ public class ScreenAdmin extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab("Borclar", jPanel4);
@@ -552,7 +553,7 @@ public class ScreenAdmin extends javax.swing.JFrame {
         Mallar m = em.createNamedQuery("Mallar.findByBarkod", Mallar.class)
                 .setParameter("barkod", (Object) jTextField1.getText())
                 .getSingleResult();
-        jComboBox2.setSelectedIndex((Integer) m.getIdMallar() - 1);
+        jComboBox2.setSelectedIndex(m.getIdMallar() - 1);
         jComboBox2.requestFocus();
         jComboBox2.requestFocusInWindow();
     }//GEN-LAST:event_jTextField1ActionPerformed
@@ -562,7 +563,8 @@ public class ScreenAdmin extends javax.swing.JFrame {
             Depo d = em.createNamedQuery("Depo.findByidMallar", Depo.class)
                     .setParameter("idMallar", (Object) jComboBox2.getSelectedItem())
                     .getSingleResult();
-            Entity.Depo f = new Depo(d.getIdDepo(), jTextField3.getText());
+            Entity.Depo f = new Depo(d.getIdDepo());
+            f.setSayi(jTextField3.getText());
             f.setIdMallar(d.getIdMallar());
             int a = Integer.parseInt(d.getSayi());
             int b = Integer.parseInt(jTextField3.getText());
@@ -573,7 +575,8 @@ public class ScreenAdmin extends javax.swing.JFrame {
             em.getTransaction().commit();
             FillTheTableDepo();
         } catch (Exception e) {
-            Entity.Depo d = new Depo(0, jTextField3.getText());
+            Entity.Depo d = new Depo(0);
+            d.setSayi(jTextField3.getText());
             d.setIdMallar((Mallar) jComboBox2.getSelectedItem());
             em.persist(d);
             em.getTransaction().begin();
@@ -593,8 +596,8 @@ public class ScreenAdmin extends javax.swing.JFrame {
         Double medaxil = 0.00;
         Double borc = 0.00;
         for (Kassa kassa : ListOfKassa) {
-            medaxil = medaxil + Double.parseDouble(kassa.getMedaxil());
-            borc = borc + Double.parseDouble(kassa.getBorc());
+            medaxil = medaxil + kassa.getMedaxil();
+            borc = borc + kassa.getBorc();
         }
         jLabelMedaxil.setText("" + medaxil);
         jLabelBorc.setText("" + borc);

@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package EntityController;
+package Classes;
 
-import Claslar.exceptions.IllegalOrphanException;
-import Claslar.exceptions.NonexistentEntityException;
 import Entity.Kateqoriya;
+import Entity.Mallar;
+import Classes.exceptions.IllegalOrphanException;
+import Classes.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import Entity.Mallar;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

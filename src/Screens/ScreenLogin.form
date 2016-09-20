@@ -7,40 +7,22 @@
         <Property name="persistenceUnit" type="java.lang.String" value="MagazaPU"/>
       </Properties>
     </Component>
-    <Component class="javax.persistence.Query" name="menberQuery">
+    <Component class="javax.persistence.Query" name="memberQuery">
       <Properties>
-        <Property name="query" type="java.lang.String" value="SELECT m FROM Menber m"/>
+        <Property name="query" type="java.lang.String" value="SELECT m FROM Member m"/>
         <Property name="entityManager" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$EMProperty$EntityManagerEditor">
           <ComponentRef name="MagazaPUEntityManager"/>
         </Property>
       </Properties>
     </Component>
-    <Component class="java.util.List" name="menberList">
+    <Component class="java.util.List" name="memberList">
       <Properties>
         <Property name="query" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$QueryBeanProperty$QueryEditor">
-          <ComponentRef name="menberQuery"/>
+          <ComponentRef name="memberQuery"/>
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Entity.Menber&gt;"/>
-      </AuxValues>
-    </Component>
-    <Component class="javax.persistence.Query" name="menberQuery1">
-      <Properties>
-        <Property name="query" type="java.lang.String" value="SELECT m FROM Menber m"/>
-        <Property name="entityManager" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$EMProperty$EntityManagerEditor">
-          <ComponentRef name="MagazaPUEntityManager"/>
-        </Property>
-      </Properties>
-    </Component>
-    <Component class="java.util.List" name="menberList1">
-      <Properties>
-        <Property name="query" type="java.lang.Object" editor="org.netbeans.modules.form.j2ee.J2EEPropertyModifier$QueryBeanProperty$QueryEditor">
-          <ComponentRef name="menberQuery1"/>
-        </Property>
-      </Properties>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Entity.Menber&gt;"/>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Entity.Member&gt;"/>
       </AuxValues>
     </Component>
   </NonVisualComponents>
@@ -170,7 +152,7 @@
             </Property>
           </Properties>
           <BindingProperties>
-            <BindingProperty name="elements" source="menberList1" target="jComboBox1" targetPath="elements" updateStrategy="0" immediately="false"/>
+            <BindingProperty name="elements" source="memberList" target="jComboBox1" targetPath="elements" updateStrategy="0" immediately="false"/>
           </BindingProperties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>

@@ -3,18 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package EntityController;
+package Classes;
 
-import Claslar.exceptions.NonexistentEntityException;
 import Entity.Satisnovu;
+import Entity.Kassa;
+import Classes.exceptions.NonexistentEntityException;
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 /**
  *
@@ -32,11 +35,29 @@ public class SatisnovuJpaController implements Serializable {
     }
 
     public void create(Satisnovu satisnovu) {
+        if (satisnovu.getKassaCollection() == null) {
+            satisnovu.setKassaCollection(new ArrayList<Kassa>());
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Collection<Kassa> attachedKassaCollection = new ArrayList<Kassa>();
+            for (Kassa kassaCollectionKassaToAttach : satisnovu.getKassaCollection()) {
+                kassaCollectionKassaToAttach = em.getReference(kassaCollectionKassaToAttach.getClass(), kassaCollectionKassaToAttach.getIdKassa());
+                attachedKassaCollection.add(kassaCollectionKassaToAttach);
+            }
+            satisnovu.setKassaCollection(attachedKassaCollection);
             em.persist(satisnovu);
+            for (Kassa kassaCollectionKassa : satisnovu.getKassaCollection()) {
+                Satisnovu oldIdSatisNovuOfKassaCollectionKassa = kassaCollectionKassa.getIdSatisNovu();
+                kassaCollectionKassa.setIdSatisNovu(satisnovu);
+                kassaCollectionKassa = em.merge(kassaCollectionKassa);
+                if (oldIdSatisNovuOfKassaCollectionKassa != null) {
+                    oldIdSatisNovuOfKassaCollectionKassa.getKassaCollection().remove(kassaCollectionKassa);
+                    oldIdSatisNovuOfKassaCollectionKassa = em.merge(oldIdSatisNovuOfKassaCollectionKassa);
+                }
+            }
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -50,7 +71,34 @@ public class SatisnovuJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Satisnovu persistentSatisnovu = em.find(Satisnovu.class, satisnovu.getIdSatisNovu());
+            Collection<Kassa> kassaCollectionOld = persistentSatisnovu.getKassaCollection();
+            Collection<Kassa> kassaCollectionNew = satisnovu.getKassaCollection();
+            Collection<Kassa> attachedKassaCollectionNew = new ArrayList<Kassa>();
+            for (Kassa kassaCollectionNewKassaToAttach : kassaCollectionNew) {
+                kassaCollectionNewKassaToAttach = em.getReference(kassaCollectionNewKassaToAttach.getClass(), kassaCollectionNewKassaToAttach.getIdKassa());
+                attachedKassaCollectionNew.add(kassaCollectionNewKassaToAttach);
+            }
+            kassaCollectionNew = attachedKassaCollectionNew;
+            satisnovu.setKassaCollection(kassaCollectionNew);
             satisnovu = em.merge(satisnovu);
+            for (Kassa kassaCollectionOldKassa : kassaCollectionOld) {
+                if (!kassaCollectionNew.contains(kassaCollectionOldKassa)) {
+                    kassaCollectionOldKassa.setIdSatisNovu(null);
+                    kassaCollectionOldKassa = em.merge(kassaCollectionOldKassa);
+                }
+            }
+            for (Kassa kassaCollectionNewKassa : kassaCollectionNew) {
+                if (!kassaCollectionOld.contains(kassaCollectionNewKassa)) {
+                    Satisnovu oldIdSatisNovuOfKassaCollectionNewKassa = kassaCollectionNewKassa.getIdSatisNovu();
+                    kassaCollectionNewKassa.setIdSatisNovu(satisnovu);
+                    kassaCollectionNewKassa = em.merge(kassaCollectionNewKassa);
+                    if (oldIdSatisNovuOfKassaCollectionNewKassa != null && !oldIdSatisNovuOfKassaCollectionNewKassa.equals(satisnovu)) {
+                        oldIdSatisNovuOfKassaCollectionNewKassa.getKassaCollection().remove(kassaCollectionNewKassa);
+                        oldIdSatisNovuOfKassaCollectionNewKassa = em.merge(oldIdSatisNovuOfKassaCollectionNewKassa);
+                    }
+                }
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
@@ -79,6 +127,11 @@ public class SatisnovuJpaController implements Serializable {
                 satisnovu.getIdSatisNovu();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The satisnovu with id " + id + " no longer exists.", enfe);
+            }
+            Collection<Kassa> kassaCollection = satisnovu.getKassaCollection();
+            for (Kassa kassaCollectionKassa : kassaCollection) {
+                kassaCollectionKassa.setIdSatisNovu(null);
+                kassaCollectionKassa = em.merge(kassaCollectionKassa);
             }
             em.remove(satisnovu);
             em.getTransaction().commit();

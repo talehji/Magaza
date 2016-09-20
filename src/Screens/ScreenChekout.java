@@ -5,10 +5,10 @@
  */
 package Screens;
 
-import Classes.Baza;
-import Classes.TableAdd;
+import Hands.Baza;
+import Hands.TableAdd;
 import Entity.Kassa;
-import Entity.Menber;
+import Entity.Member;
 import Entity.Satisnovu;
 import java.awt.Color;
 import java.util.List;
@@ -25,16 +25,16 @@ public class ScreenChekout extends javax.swing.JDialog {
 
     private final EntityManager em;
     private List<TableAdd> listofbaza;
-    private Menber menber;
+    private Member member;
     public int Status;
 
     /**
      * Creates new form ScreenChekout
      */
-    public ScreenChekout(java.awt.Frame parent, boolean modal, Menber menber) {
+    public ScreenChekout(java.awt.Frame parent, boolean modal, Member member) {
         super(parent, modal);
         initComponents();
-        this.menber = menber;
+        this.member = member;
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("MagazaPU");
         em = emf.createEntityManager();
         this.getContentPane().setBackground(Color.DARK_GRAY);  //Whatever color
@@ -81,11 +81,12 @@ public class ScreenChekout extends javax.swing.JDialog {
         Status = 1;
         if (jComboBox1.getSelectedIndex() == 0) {
             Status = 1;
-            Entity.Kassa d = new Kassa(0, jTextField1.getText(), "0", sqlDate);
+            Entity.Kassa d = new Kassa(0);
+            d.setTarix(sqlDate);
+            d.setBorc(Double.parseDouble("0"));
+            d.setMedaxil(Double.parseDouble(jTextField1.getText()));
             d.setIdSatisNovu((Satisnovu) jComboBox1.getSelectedItem());
-            System.out.println("1");
-            d.setIdMenber(em.find(Menber.class, menber.getIdMenber()));
-            System.out.println("2");
+            d.setIdMember(em.find(Member.class, member.getIdMember()));
             em.persist(d);
             em.getTransaction().begin();
             em.getTransaction().commit();
@@ -93,15 +94,18 @@ public class ScreenChekout extends javax.swing.JDialog {
         } else if (jComboBox1.getSelectedIndex() == 1) {
             Status = 2;
             double borc = Double.parseDouble(jTextField1.getText()) - Double.parseDouble(jTextFieldNisyedenAlinanMebleg.getText());
-            Entity.Kassa d = new Kassa(0, jTextField1.getText(), Double.toString(borc), sqlDate);
+            Entity.Kassa d = new Kassa(0);
+            d.setTarix(sqlDate);
+            d.setBorc(borc);
+            d.setMedaxil(Double.parseDouble(jTextField1.getText()));
             d.setIdSatisNovu((Satisnovu) jComboBox1.getSelectedItem());
-            d.setIdMenber(em.find(Menber.class, menber.getIdMenber()));
+            d.setIdMember(em.find(Member.class, member.getIdMember()));
             em.persist(d);
             em.getTransaction().begin();
             em.getTransaction().commit();
             ScreenMusteri f = new ScreenMusteri(null, rootPaneCheckingEnabled);
             f.setVisible(rootPaneCheckingEnabled);
-            if (f.selectedMushteri == null) {
+            if (f.selectedMushteri.getIdMusteri() == null) {
                 Status = 3;
             }
             this.dispose();

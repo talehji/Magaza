@@ -29,8 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Depo.findAll", query = "SELECT d FROM Depo d"),
     @NamedQuery(name = "Depo.findByIdDepo", query = "SELECT d FROM Depo d WHERE d.idDepo = :idDepo"),
-    @NamedQuery(name = "Depo.findBySayi", query = "SELECT d FROM Depo d WHERE d.sayi = :sayi"),
-    @NamedQuery(name = "Depo.findByidMallar", query = "SELECT d FROM Depo d WHERE d.idMallar = :idMallar")})
+    @NamedQuery(name = "Depo.findBySayi", query = "SELECT d FROM Depo d WHERE d.sayi = :sayi")})
 public class Depo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -39,11 +38,10 @@ public class Depo implements Serializable {
     @Basic(optional = false)
     @Column(name = "idDepo")
     private Integer idDepo;
-    @Basic(optional = false)
     @Column(name = "Sayi")
     private String sayi;
     @JoinColumn(name = "idMallar", referencedColumnName = "idMallar")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Mallar idMallar;
 
     public Depo() {
@@ -51,11 +49,6 @@ public class Depo implements Serializable {
 
     public Depo(Integer idDepo) {
         this.idDepo = idDepo;
-    }
-
-    public Depo(Integer idDepo, String sayi) {
-        this.idDepo = idDepo;
-        this.sayi = sayi;
     }
 
     public Integer getIdDepo() {
@@ -104,7 +97,7 @@ public class Depo implements Serializable {
 
     @Override
     public String toString() {
-        return "Connection.Depo[ idDepo=" + idDepo + " ]";
+        return "Classes.Depo[ idDepo=" + idDepo + " ]";
     }
     
 }

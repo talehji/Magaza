@@ -5,12 +5,9 @@
  */
 package Entity;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,7 +17,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -37,21 +33,16 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Satisnovu.findByAd", query = "SELECT s FROM Satisnovu s WHERE s.ad = :ad")})
 public class Satisnovu implements Serializable {
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idSatisNovu")
-    private Collection<Kassa> kassaCollection;
-
-    @Transient
-    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "idSatisNovu")
     private Integer idSatisNovu;
-    @Basic(optional = false)
     @Column(name = "Ad")
     private String ad;
+    @OneToMany(mappedBy = "idSatisNovu")
+    private Collection<Kassa> kassaCollection;
 
     public Satisnovu() {
     }
@@ -60,19 +51,12 @@ public class Satisnovu implements Serializable {
         this.idSatisNovu = idSatisNovu;
     }
 
-    public Satisnovu(Integer idSatisNovu, String ad) {
-        this.idSatisNovu = idSatisNovu;
-        this.ad = ad;
-    }
-
     public Integer getIdSatisNovu() {
         return idSatisNovu;
     }
 
     public void setIdSatisNovu(Integer idSatisNovu) {
-        Integer oldIdSatisNovu = this.idSatisNovu;
         this.idSatisNovu = idSatisNovu;
-        changeSupport.firePropertyChange("idSatisNovu", oldIdSatisNovu, idSatisNovu);
     }
 
     public String getAd() {
@@ -80,9 +64,16 @@ public class Satisnovu implements Serializable {
     }
 
     public void setAd(String ad) {
-        String oldAd = this.ad;
         this.ad = ad;
-        changeSupport.firePropertyChange("ad", oldAd, ad);
+    }
+
+    @XmlTransient
+    public Collection<Kassa> getKassaCollection() {
+        return kassaCollection;
+    }
+
+    public void setKassaCollection(Collection<Kassa> kassaCollection) {
+        this.kassaCollection = kassaCollection;
     }
 
     @Override
@@ -108,23 +99,6 @@ public class Satisnovu implements Serializable {
     @Override
     public String toString() {
         return ad;
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.addPropertyChangeListener(listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.removePropertyChangeListener(listener);
-    }
-
-    @XmlTransient
-    public Collection<Kassa> getKassaCollection() {
-        return kassaCollection;
-    }
-
-    public void setKassaCollection(Collection<Kassa> kassaCollection) {
-        this.kassaCollection = kassaCollection;
     }
     
 }

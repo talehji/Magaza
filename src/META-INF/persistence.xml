@@ -10,6 +10,8 @@
     <class>Entity.Satis</class>
     <class>Entity.Satisnovu</class>
     <class>Entity.Kassa</class>
+    <class>Entity.Setting</class>
+    <class>Entity.Member</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/magaza?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.user" value="root"/>
