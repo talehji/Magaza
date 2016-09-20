@@ -12,6 +12,7 @@ import Entity.Mallar;
 import Entity.Member;
 import Entity.Musteri;
 import Entity.Satis;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -60,6 +61,10 @@ public class ScreenSatici extends javax.swing.JDialog {
 
         jTable1.setModel(tmodel);
 
+        jTable1.setAutoResizeMode(jTable1.AUTO_RESIZE_ALL_COLUMNS);
+        jTable1.setRowHeight(24);
+        jTable1.setFont(new Font("Tahoma", Font.BOLD, 18));
+        
         listofbaza = Baza.ListOfTable;
 
         for (TableAdd b : listofbaza) {
@@ -130,6 +135,8 @@ public class ScreenSatici extends javax.swing.JDialog {
             }
         });
 
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 0, 0));
         jButton1.setText("Çıxış");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -137,7 +144,8 @@ public class ScreenSatici extends javax.swing.JDialog {
             }
         });
 
-        jLabelIshchiAdi.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabelIshchiAdi.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabelIshchiAdi.setForeground(new java.awt.Color(0, 102, 0));
         jLabelIshchiAdi.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabelIshchiAdi.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
@@ -163,7 +171,7 @@ public class ScreenSatici extends javax.swing.JDialog {
                         .addComponent(jTextFieldBarkod, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabelIshchiAdi, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(jButton1))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -174,13 +182,12 @@ public class ScreenSatici extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1)
                         .addComponent(jTextFieldBarkod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jButton1)
-                        .addComponent(jLabelIshchiAdi, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabelIshchiAdi, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -197,7 +204,6 @@ public class ScreenSatici extends javax.swing.JDialog {
 
 
     private void jTextFieldBarkodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldBarkodActionPerformed
-        ScreenMusteri r = new ScreenMusteri(null, rootPaneCheckingEnabled);
         if (jTextFieldBarkod.getText().equals("")) {
             ScreenChekout d = new ScreenChekout(null, rootPaneCheckingEnabled, member);
             this.setAlwaysOnTop(false);
@@ -205,11 +211,9 @@ public class ScreenSatici extends javax.swing.JDialog {
             d.setVisible(rootPaneCheckingEnabled);
             this.setAlwaysOnTop(true);
             Object a = em.createQuery("select max(u.idKassa) from Kassa u", Integer.class).getSingleResult();
-            System.out.println(r.selectedMushteri);
 
             switch (d.Status) {
                 case 3:
-                    System.out.println("");
                     break;
                 case 1:
                     for (TableAdd t : listofbaza) {
@@ -217,23 +221,23 @@ public class ScreenSatici extends javax.swing.JDialog {
                         f.setIdKassa(em.find(Kassa.class, a));
                         f.setIdMallar(em.find(Mallar.class, t.id));
                         f.setIdMusteri(em.find(Musteri.class, 1));
-                        System.out.println("alindi negd");
                         em.persist(f);
                         em.getTransaction().begin();
                         em.getTransaction().commit();
-                    }   break;
+                    }
+                    break;
                 case 2:
                     for (TableAdd t : listofbaza) {
                         Entity.Satis f = new Satis(0);
                         f.setIdKassa(em.find(Kassa.class, a));
                         f.setIdMallar(em.find(Mallar.class, t.id));
-                        System.out.println(r.selectedMushteri.getIdMusteri());
-                        f.setIdMusteri(em.find(Musteri.class, r.selectedMushteri));
-                        System.out.println("alindi nisye");
+                        ScreenChekout r = new ScreenChekout(null, rootPaneCheckingEnabled, member);
+                        f.setIdMusteri(em.find(Musteri.class, r.SelectedMusteri.getIdMusteri()));
                         em.persist(f);
                         em.getTransaction().begin();
                         em.getTransaction().commit();
-                    }   break;
+                    }
+                    break;
                 default:
                     break;
             }

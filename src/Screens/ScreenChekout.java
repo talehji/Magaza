@@ -9,6 +9,7 @@ import Hands.Baza;
 import Hands.TableAdd;
 import Entity.Kassa;
 import Entity.Member;
+import Entity.Musteri;
 import Entity.Satisnovu;
 import java.awt.Color;
 import java.util.List;
@@ -25,11 +26,15 @@ public class ScreenChekout extends javax.swing.JDialog {
 
     private final EntityManager em;
     private List<TableAdd> listofbaza;
-    private Member member;
+    private final Member member;
     public int Status;
+    public static Musteri SelectedMusteri;
 
     /**
      * Creates new form ScreenChekout
+     * @param parent
+     * @param modal
+     * @param member
      */
     public ScreenChekout(java.awt.Frame parent, boolean modal, Member member) {
         super(parent, modal);
@@ -105,7 +110,8 @@ public class ScreenChekout extends javax.swing.JDialog {
             em.getTransaction().commit();
             ScreenMusteri f = new ScreenMusteri(null, rootPaneCheckingEnabled);
             f.setVisible(rootPaneCheckingEnabled);
-            if (f.selectedMushteri.getIdMusteri() == null) {
+            SelectedMusteri = f.selectedMushteri;
+            if (SelectedMusteri.getIdMusteri() == null) {
                 Status = 3;
             }
             this.dispose();

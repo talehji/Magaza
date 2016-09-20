@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Depo.findAll", query = "SELECT d FROM Depo d"),
     @NamedQuery(name = "Depo.findByIdDepo", query = "SELECT d FROM Depo d WHERE d.idDepo = :idDepo"),
+    @NamedQuery(name = "Depo.findByIdMallar", query = "SELECT d FROM Depo d WHERE d.idMallar = :idMallar"),
     @NamedQuery(name = "Depo.findBySayi", query = "SELECT d FROM Depo d WHERE d.sayi = :sayi")})
 public class Depo implements Serializable {
 
