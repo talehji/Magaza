@@ -28,6 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Satis.findAll", query = "SELECT s FROM Satis s"),
+    @NamedQuery(name = "Satis.findByIdKassa", query = "SELECT s FROM Satis s WHERE s.idKassa = :idKassa"),
     @NamedQuery(name = "Satis.findByIdSatis", query = "SELECT s FROM Satis s WHERE s.idSatis = :idSatis")})
 public class Satis implements Serializable {
 
@@ -108,7 +109,7 @@ public class Satis implements Serializable {
 
     @Override
     public String toString() {
-        return "Classes.Satis[ idSatis=" + idSatis + " ]";
+        return "Entity.Satis[ idSatis=" + idSatis + " ]";
     }
     
 }

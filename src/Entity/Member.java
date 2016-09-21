@@ -5,8 +5,6 @@
  */
 package Entity;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
@@ -19,7 +17,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -39,9 +36,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Member.findBySoyad", query = "SELECT m FROM Member m WHERE m.soyad = :soyad"),
     @NamedQuery(name = "Member.findByTelefon", query = "SELECT m FROM Member m WHERE m.telefon = :telefon")})
 public class Member implements Serializable {
-
-    @Transient
-    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -74,23 +68,19 @@ public class Member implements Serializable {
     }
 
     public void setIdMember(Integer idMember) {
-        Integer oldIdMember = this.idMember;
         this.idMember = idMember;
-        changeSupport.firePropertyChange("idMember", oldIdMember, idMember);
     }
 
     public String getAd() {
         return ad;
     }
-    
+
     public String getAdSoyad() {
         return ad+" "+soyad;
     }
 
     public void setAd(String ad) {
-        String oldAd = this.ad;
         this.ad = ad;
-        changeSupport.firePropertyChange("ad", oldAd, ad);
     }
 
     public String getIsActive() {
@@ -98,9 +88,7 @@ public class Member implements Serializable {
     }
 
     public void setIsActive(String isActive) {
-        String oldIsActive = this.isActive;
         this.isActive = isActive;
-        changeSupport.firePropertyChange("isActive", oldIsActive, isActive);
     }
 
     public String getPassword() {
@@ -108,9 +96,7 @@ public class Member implements Serializable {
     }
 
     public void setPassword(String password) {
-        String oldPassword = this.password;
         this.password = password;
-        changeSupport.firePropertyChange("password", oldPassword, password);
     }
 
     public String getSoyad() {
@@ -118,9 +104,7 @@ public class Member implements Serializable {
     }
 
     public void setSoyad(String soyad) {
-        String oldSoyad = this.soyad;
         this.soyad = soyad;
-        changeSupport.firePropertyChange("soyad", oldSoyad, soyad);
     }
 
     public String getTelefon() {
@@ -128,9 +112,7 @@ public class Member implements Serializable {
     }
 
     public void setTelefon(String telefon) {
-        String oldTelefon = this.telefon;
         this.telefon = telefon;
-        changeSupport.firePropertyChange("telefon", oldTelefon, telefon);
     }
 
     @XmlTransient
@@ -165,14 +147,6 @@ public class Member implements Serializable {
     @Override
     public String toString() {
         return ad+" "+soyad;
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.addPropertyChangeListener(listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        changeSupport.removePropertyChangeListener(listener);
     }
     
 }

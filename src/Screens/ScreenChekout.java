@@ -32,6 +32,7 @@ public class ScreenChekout extends javax.swing.JDialog {
 
     /**
      * Creates new form ScreenChekout
+     *
      * @param parent
      * @param modal
      * @param member
@@ -90,6 +91,7 @@ public class ScreenChekout extends javax.swing.JDialog {
             d.setTarix(sqlDate);
             d.setBorc(Double.parseDouble("0"));
             d.setMedaxil(Double.parseDouble(jTextField1.getText()));
+            d.setIdMusteri(em.find(Musteri.class, 1));
             d.setIdSatisNovu((Satisnovu) jComboBox1.getSelectedItem());
             d.setIdMember(em.find(Member.class, member.getIdMember()));
             em.persist(d);
@@ -105,12 +107,13 @@ public class ScreenChekout extends javax.swing.JDialog {
             d.setMedaxil(Double.parseDouble(jTextField1.getText()));
             d.setIdSatisNovu((Satisnovu) jComboBox1.getSelectedItem());
             d.setIdMember(em.find(Member.class, member.getIdMember()));
-            em.persist(d);
-            em.getTransaction().begin();
-            em.getTransaction().commit();
             ScreenMusteri f = new ScreenMusteri(null, rootPaneCheckingEnabled);
             f.setVisible(rootPaneCheckingEnabled);
             SelectedMusteri = f.selectedMushteri;
+            d.setIdMusteri(em.find(Musteri.class, SelectedMusteri.getIdMusteri()));
+            em.persist(d);
+            em.getTransaction().begin();
+            em.getTransaction().commit();
             if (SelectedMusteri.getIdMusteri() == null) {
                 Status = 3;
             }

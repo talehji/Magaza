@@ -8,6 +8,7 @@ package Screens;
 import Entity.Depo;
 import Entity.Kassa;
 import Entity.Mallar;
+import Entity.Musteri;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -25,6 +26,8 @@ public class ScreenAdmin extends javax.swing.JFrame {
 
     private final EntityManager em;
     private List<Kassa> ListOfKassa;
+    private List<Musteri> ListOfBorclar;
+    public Kassa selectedKassa;
 
     /**
      * Creates new form ScreenAdmin
@@ -40,6 +43,7 @@ public class ScreenAdmin extends javax.swing.JFrame {
         FillTheTableMallar();
         FillTheTableDepo();
         FillTheTableKassa(false, null, null);
+        FillTheTableBorclar();
     }
 
     private void FillTheTableMallar() {
@@ -129,6 +133,7 @@ public class ScreenAdmin extends javax.swing.JFrame {
         tmodel.addColumn("Borc");
         tmodel.addColumn("Tarix");
         tmodel.addColumn("Saat");
+        tmodel.addColumn("Müştəri");
         tmodel.addColumn("Satıcı");
 
         jTableKassa.setModel(tmodel);
@@ -152,7 +157,48 @@ public class ScreenAdmin extends javax.swing.JFrame {
                 b.getBorc(),
                 t.format(b.getTarix()),
                 s.format(b.getTarix()),
-                b.getIdMember().getAdSoyad()
+                b.getIdMusteri().getAdSoyad(),
+                b.getIdMember().getAdSoyad(),});
+        }
+
+    }
+
+    private void FillTheTableBorclar() {
+
+        DefaultTableModel tmodel = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+
+        };
+        tmodel.addColumn("İD");
+        tmodel.addColumn("Müştəri");
+        tmodel.addColumn("Telefon");
+        tmodel.addColumn("Qeyd");
+        tmodel.addColumn("Borc");
+
+        jTableBorclar.setModel(tmodel);
+
+        ListOfBorclar = em.createNamedQuery("Musteri.findAll", Musteri.class).getResultList();
+
+        for (Musteri b : ListOfBorclar) {
+
+            List<Kassa> GetBorc = em.createNamedQuery("Kassa.findByIdMusteri", Kassa.class)
+                    .setParameter("idMusteri", em.find(Musteri.class, b.getIdMusteri()))
+                    .getResultList();
+            int i;
+            double sum = 0;
+            for (i = 0; i < GetBorc.size(); i++) {
+                sum += GetBorc.get(i).getBorc();
+            }
+
+            tmodel.insertRow(jTableBorclar.getRowCount(), new Object[]{
+                b.getIdMusteri(),
+                b.getAdSoyad(),
+                b.getTelefon(),
+                b.getQeyd(),
+                sum
             });
         }
 
@@ -186,6 +232,8 @@ public class ScreenAdmin extends javax.swing.JFrame {
         satisList1 = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : satisQuery1.getResultList();
         musteriQuery = java.beans.Beans.isDesignTime() ? null : MagazaPUEntityManager.createQuery("SELECT m FROM Musteri m");
         musteriList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : musteriQuery.getResultList();
+        satisnovuQuery = java.beans.Beans.isDesignTime() ? null : MagazaPUEntityManager.createQuery("SELECT s FROM Satisnovu s");
+        satisnovuList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : satisnovuQuery.getResultList();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -216,7 +264,7 @@ public class ScreenAdmin extends javax.swing.JFrame {
         jTableKassa = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        jTableBorclar = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu3 = new javax.swing.JMenu();
         jMenu1 = new javax.swing.JMenu();
@@ -429,13 +477,13 @@ public class ScreenAdmin extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jLabelUmumiGelir))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton5)
-                .addContainerGap())
+                .addGap(44, 44, 44))
         );
 
         jTableKassa.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
@@ -447,6 +495,11 @@ public class ScreenAdmin extends javax.swing.JFrame {
 
             }
         ));
+        jTableKassa.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableKassaMouseClicked(evt);
+            }
+        });
         jScrollPane4.setViewportView(jTableKassa);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -472,8 +525,8 @@ public class ScreenAdmin extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("   Kassa   ", jPanel3);
 
-        jTable3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        jTableBorclar.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jTableBorclar.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -481,7 +534,7 @@ public class ScreenAdmin extends javax.swing.JFrame {
 
             }
         ));
-        jScrollPane5.setViewportView(jTable3);
+        jScrollPane5.setViewportView(jTableBorclar);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -574,7 +627,7 @@ public class ScreenAdmin extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             Depo d = em.createNamedQuery("Depo.findByIdMallar", Depo.class)
-                    .setParameter("idMallar", jComboBox2.getSelectedItem())
+                    .setParameter("idMallar", (Mallar) jComboBox2.getSelectedItem())
                     .getSingleResult();
             Entity.Depo f = new Depo(d.getIdDepo());
             f.setSayi(jTextField3.getText());
@@ -621,6 +674,17 @@ public class ScreenAdmin extends javax.swing.JFrame {
         ScreenMusteri d = new ScreenMusteri(this, rootPaneCheckingEnabled);
         d.setVisible(rootPaneCheckingEnabled);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jTableKassaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableKassaMouseClicked
+        if (evt.getClickCount() == 2) {
+            DefaultTableModel model = (DefaultTableModel) jTableKassa.getModel();
+            int index = jTableKassa.getSelectedRow();
+            selectedKassa = ListOfKassa.get(index);
+            ScreenSeeKassaDetail d = new ScreenSeeKassaDetail(this, rootPaneCheckingEnabled, selectedKassa);
+            d.setVisible(rootPaneCheckingEnabled); 
+            
+        }
+    }//GEN-LAST:event_jTableKassaMouseClicked
 
     /**
      * @param args the command line arguments
@@ -684,7 +748,7 @@ public class ScreenAdmin extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable3;
+    private javax.swing.JTable jTableBorclar;
     private javax.swing.JTable jTableDepo;
     private javax.swing.JTable jTableKassa;
     private javax.swing.JTable jTableMallar;
@@ -712,6 +776,8 @@ public class ScreenAdmin extends javax.swing.JFrame {
     private java.util.List<Entity.Satis> satisList1;
     private javax.persistence.Query satisQuery;
     private javax.persistence.Query satisQuery1;
+    private java.util.List<Entity.Satisnovu> satisnovuList;
+    private javax.persistence.Query satisnovuQuery;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

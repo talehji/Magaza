@@ -37,6 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Kassa.findByIdKassa", query = "SELECT k FROM Kassa k WHERE k.idKassa = :idKassa"),
     @NamedQuery(name = "Kassa.findByBorc", query = "SELECT k FROM Kassa k WHERE k.borc = :borc"),
     @NamedQuery(name = "Kassa.findByMedaxil", query = "SELECT k FROM Kassa k WHERE k.medaxil = :medaxil"),
+    @NamedQuery(name = "Kassa.findByIdMusteri", query = "SELECT k FROM Kassa k WHERE k.idMusteri = :idMusteri"),
     @NamedQuery(name = "Kassa.findByTarix", query = "SELECT k FROM Kassa k WHERE k.tarix = :tarix")})
 public class Kassa implements Serializable {
 
@@ -56,6 +57,9 @@ public class Kassa implements Serializable {
     private Date tarix;
     @OneToMany(mappedBy = "idKassa")
     private Collection<Satis> satisCollection;
+    @JoinColumn(name = "idMusteri", referencedColumnName = "idMusteri")
+    @ManyToOne
+    private Musteri idMusteri;
     @JoinColumn(name = "idMember", referencedColumnName = "idMember")
     @ManyToOne
     private Member idMember;
@@ -111,6 +115,14 @@ public class Kassa implements Serializable {
         this.satisCollection = satisCollection;
     }
 
+    public Musteri getIdMusteri() {
+        return idMusteri;
+    }
+
+    public void setIdMusteri(Musteri idMusteri) {
+        this.idMusteri = idMusteri;
+    }
+
     public Member getIdMember() {
         return idMember;
     }
@@ -149,7 +161,7 @@ public class Kassa implements Serializable {
 
     @Override
     public String toString() {
-        return "Classes.Kassa[ idKassa=" + idKassa + " ]";
+        return "Entity.Kassa[ idKassa=" + idKassa + " ]";
     }
     
 }

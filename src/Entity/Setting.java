@@ -91,7 +91,7 @@ public class Setting implements Serializable {
 
     @Override
     public String toString() {
-        return "Classes.Setting[ idSetting=" + idSetting + " ]";
+        return "Entity.Setting[ idSetting=" + idSetting + " ]";
     }
     
 }

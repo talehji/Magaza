@@ -52,6 +52,8 @@ public class Musteri implements Serializable {
     private String telefon;
     @OneToMany(mappedBy = "idMusteri")
     private Collection<Satis> satisCollection;
+    @OneToMany(mappedBy = "idMusteri")
+    private Collection<Kassa> kassaCollection;
 
     public Musteri() {
     }
@@ -70,6 +72,10 @@ public class Musteri implements Serializable {
 
     public String getAd() {
         return ad;
+    }
+
+    public String getAdSoyad() {
+        return ad+" "+soyad;
     }
 
     public void setAd(String ad) {
@@ -107,6 +113,15 @@ public class Musteri implements Serializable {
 
     public void setSatisCollection(Collection<Satis> satisCollection) {
         this.satisCollection = satisCollection;
+    }
+
+    @XmlTransient
+    public Collection<Kassa> getKassaCollection() {
+        return kassaCollection;
+    }
+
+    public void setKassaCollection(Collection<Kassa> kassaCollection) {
+        this.kassaCollection = kassaCollection;
     }
 
     @Override

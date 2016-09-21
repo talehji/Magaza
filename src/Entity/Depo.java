@@ -98,7 +98,7 @@ public class Depo implements Serializable {
 
     @Override
     public String toString() {
-        return "Classes.Depo[ idDepo=" + idDepo + " ]";
+        return "Entity.Depo[ idDepo=" + idDepo + " ]";
     }
     
 }
