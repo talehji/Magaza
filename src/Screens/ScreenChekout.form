@@ -52,9 +52,6 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemNegd">
               <Properties>
-                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
-                  <KeyStroke key="ENTER"/>
-                </Property>
                 <Property name="text" type="java.lang.String" value="Negd"/>
               </Properties>
               <Events>
@@ -63,9 +60,6 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItemNisye">
               <Properties>
-                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
-                  <KeyStroke key="N"/>
-                </Property>
                 <Property name="text" type="java.lang.String" value="Nisye"/>
               </Properties>
               <Events>
@@ -192,6 +186,7 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonKassayaVurActionPerformed"/>
+        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jButtonKassayaVurKeyReleased"/>
       </Events>
     </Component>
     <Component class="javax.swing.JComboBox" name="jComboBox1">

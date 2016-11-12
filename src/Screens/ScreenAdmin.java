@@ -212,28 +212,6 @@ public class ScreenAdmin extends javax.swing.JFrame {
         MagazaPUEntityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("MagazaPU").createEntityManager();
         mallarQuery = java.beans.Beans.isDesignTime() ? null : MagazaPUEntityManager.createQuery("SELECT m FROM Mallar m");
         mallarList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : mallarQuery.getResultList();
-        kateqoriyaQuery = java.beans.Beans.isDesignTime() ? null : MagazaPUEntityManager.createQuery("SELECT k FROM Kateqoriya k");
-        kateqoriyaList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : kateqoriyaQuery.getResultList();
-        mallarQuery1 = java.beans.Beans.isDesignTime() ? null : MagazaPUEntityManager.createQuery("SELECT m FROM Mallar m");
-        mallarList1 = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : mallarQuery1.getResultList();
-        mallarQuery2 = java.beans.Beans.isDesignTime() ? null : MagazaPUEntityManager.createQuery("SELECT m FROM Mallar m");
-        mallarList2 = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : mallarQuery2.getResultList();
-        mallarQuery3 = java.beans.Beans.isDesignTime() ? null : MagazaPUEntityManager.createQuery("SELECT m FROM Mallar m");
-        mallarList3 = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : mallarQuery3.getResultList();
-        mallarQuery4 = java.beans.Beans.isDesignTime() ? null : MagazaPUEntityManager.createQuery("SELECT m FROM Mallar m");
-        mallarList4 = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : mallarQuery4.getResultList();
-        kassaQuery = java.beans.Beans.isDesignTime() ? null : MagazaPUEntityManager.createQuery("SELECT k FROM Kassa k");
-        kassaList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : kassaQuery.getResultList();
-        satisQuery = java.beans.Beans.isDesignTime() ? null : MagazaPUEntityManager.createQuery("SELECT s FROM Satis s");
-        satisList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : satisQuery.getResultList();
-        kassaQuery1 = java.beans.Beans.isDesignTime() ? null : MagazaPUEntityManager.createQuery("SELECT k FROM Kassa k");
-        kassaList1 = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : kassaQuery1.getResultList();
-        satisQuery1 = java.beans.Beans.isDesignTime() ? null : MagazaPUEntityManager.createQuery("SELECT s FROM Satis s");
-        satisList1 = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : satisQuery1.getResultList();
-        musteriQuery = java.beans.Beans.isDesignTime() ? null : MagazaPUEntityManager.createQuery("SELECT m FROM Musteri m");
-        musteriList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : musteriQuery.getResultList();
-        satisnovuQuery = java.beans.Beans.isDesignTime() ? null : MagazaPUEntityManager.createQuery("SELECT s FROM Satisnovu s");
-        satisnovuList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : satisnovuQuery.getResultList();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -253,13 +231,15 @@ public class ScreenAdmin extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jButton5 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabelMedaxil = new javax.swing.JLabel();
-        jLabelBorc = new javax.swing.JLabel();
         jLabelUmumiGelir = new javax.swing.JLabel();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jDateChooser2 = new com.toedter.calendar.JDateChooser();
+        jLabel7 = new javax.swing.JLabel();
+        jLabelBorc = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabelPlastikKart = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTableKassa = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
@@ -363,7 +343,7 @@ public class ScreenAdmin extends javax.swing.JFrame {
         jComboBox2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jComboBox2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, mallarList4, jComboBox2);
+        org.jdesktop.swingbinding.JComboBoxBinding jComboBoxBinding = org.jdesktop.swingbinding.SwingBindings.createJComboBoxBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, mallarList, jComboBox2);
         bindingGroup.addBinding(jComboBoxBinding);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -422,20 +402,26 @@ public class ScreenAdmin extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel4.setText("Nəğd alış");
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel5.setText("Borc");
-
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel6.setText("Ümumi gəlir");
 
         jLabelMedaxil.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabelMedaxil.setText(" ");
 
+        jLabelUmumiGelir.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabelUmumiGelir.setText(" ");
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel7.setText("Borc");
+
         jLabelBorc.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabelBorc.setText(" ");
 
-        jLabelUmumiGelir.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabelUmumiGelir.setText(" ");
+        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel8.setText("Plastik Kart");
+
+        jLabelPlastikKart.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabelPlastikKart.setText(" ");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -446,18 +432,20 @@ public class ScreenAdmin extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
                     .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jDateChooser2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(32, 32, 32)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabelMedaxil, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabelUmumiGelir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabelBorc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabelUmumiGelir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jDateChooser2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabelPlastikKart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -467,17 +455,21 @@ public class ScreenAdmin extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabelUmumiGelir))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jLabelMedaxil))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
+                    .addComponent(jLabel7)
                     .addComponent(jLabelBorc))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabelUmumiGelir))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabelPlastikKart))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 141, Short.MAX_VALUE)
                 .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -659,15 +651,22 @@ public class ScreenAdmin extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         FillTheTableKassa(true, jDateChooser2.getCalendar(), jDateChooser1.getCalendar());
-        Double medaxil = 0.00;
-        Double borc = 0.00;
+        double medaxil = 0.00;
+        double borc = 0.00;
+        double PlastikKart = 0.00;
         for (Kassa kassa : ListOfKassa) {
             medaxil = medaxil + kassa.getMedaxil();
             borc = borc + kassa.getBorc();
+                System.out.println("jsdcn");
+            if(kassa.getIdSatisNovu().equals(3)){
+                System.out.println("jsdcn");
+                PlastikKart = PlastikKart + kassa.getMedaxil();
+            }
         }
         jLabelMedaxil.setText("" + medaxil);
         jLabelBorc.setText("" + borc);
         jLabelUmumiGelir.setText("" + (medaxil - borc));
+        jLabelPlastikKart.setText(""+PlastikKart);
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -727,10 +726,12 @@ public class ScreenAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabelBorc;
     private javax.swing.JLabel jLabelMedaxil;
+    private javax.swing.JLabel jLabelPlastikKart;
     private javax.swing.JLabel jLabelUmumiGelir;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -754,30 +755,8 @@ public class ScreenAdmin extends javax.swing.JFrame {
     private javax.swing.JTable jTableMallar;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField3;
-    private java.util.List<Entity.Kassa> kassaList;
-    private java.util.List<Entity.Kassa> kassaList1;
-    private javax.persistence.Query kassaQuery;
-    private javax.persistence.Query kassaQuery1;
-    private java.util.List<Entity.Kateqoriya> kateqoriyaList;
-    private javax.persistence.Query kateqoriyaQuery;
     private java.util.List<Entity.Mallar> mallarList;
-    private java.util.List<Entity.Mallar> mallarList1;
-    private java.util.List<Entity.Mallar> mallarList2;
-    private java.util.List<Entity.Mallar> mallarList3;
-    private java.util.List<Entity.Mallar> mallarList4;
     private javax.persistence.Query mallarQuery;
-    private javax.persistence.Query mallarQuery1;
-    private javax.persistence.Query mallarQuery2;
-    private javax.persistence.Query mallarQuery3;
-    private javax.persistence.Query mallarQuery4;
-    private java.util.List<Entity.Musteri> musteriList;
-    private javax.persistence.Query musteriQuery;
-    private java.util.List<Entity.Satis> satisList;
-    private java.util.List<Entity.Satis> satisList1;
-    private javax.persistence.Query satisQuery;
-    private javax.persistence.Query satisQuery1;
-    private java.util.List<Entity.Satisnovu> satisnovuList;
-    private javax.persistence.Query satisnovuQuery;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

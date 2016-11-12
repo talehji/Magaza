@@ -11,7 +11,10 @@ import Entity.Kassa;
 import Entity.Member;
 import Entity.Musteri;
 import Entity.Satisnovu;
+import Object.Members;
 import java.awt.Color;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -26,7 +29,7 @@ public class ScreenChekout extends javax.swing.JDialog {
 
     private final EntityManager em;
     private List<TableAdd> listofbaza;
-    private final Member member;
+    private final Members member;
     public int Status;
     public static Musteri SelectedMusteri;
 
@@ -37,14 +40,15 @@ public class ScreenChekout extends javax.swing.JDialog {
      * @param modal
      * @param member
      */
-    public ScreenChekout(java.awt.Frame parent, boolean modal, Member member) {
+    public ScreenChekout(java.awt.Frame parent, boolean modal, Members member) {
         super(parent, modal);
         initComponents();
         this.member = member;
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("MagazaPU");
         em = emf.createEntityManager();
-        this.getContentPane().setBackground(Color.DARK_GRAY);  //Whatever color
+        getContentPane().setBackground(new Color(255, 102, 102));
 
+        jButtonKassayaVur.requestFocus();
         jButtonKassayaVur.requestFocusInWindow();
         jTextFieldNisyedenAlinanMebleg.setEnabled(false);
 
@@ -85,39 +89,61 @@ public class ScreenChekout extends javax.swing.JDialog {
         long t = date.getTime();
         java.sql.Date sqlDate = new java.sql.Date(t);
         Status = 1;
-        if (jComboBox1.getSelectedIndex() == 0) {
-            Status = 1;
-            Entity.Kassa d = new Kassa(0);
-            d.setTarix(sqlDate);
-            d.setBorc(Double.parseDouble("0"));
-            d.setMedaxil(Double.parseDouble(jTextField1.getText()));
-            d.setIdMusteri(em.find(Musteri.class, 1));
-            d.setIdSatisNovu((Satisnovu) jComboBox1.getSelectedItem());
-            d.setIdMember(em.find(Member.class, member.getIdMember()));
-            em.persist(d);
-            em.getTransaction().begin();
-            em.getTransaction().commit();
-            this.dispose();
-        } else if (jComboBox1.getSelectedIndex() == 1) {
-            Status = 2;
-            double borc = Double.parseDouble(jTextField1.getText()) - Double.parseDouble(jTextFieldNisyedenAlinanMebleg.getText());
-            Entity.Kassa d = new Kassa(0);
-            d.setTarix(sqlDate);
-            d.setBorc(borc);
-            d.setMedaxil(Double.parseDouble(jTextField1.getText()));
-            d.setIdSatisNovu((Satisnovu) jComboBox1.getSelectedItem());
-            d.setIdMember(em.find(Member.class, member.getIdMember()));
-            ScreenMusteri f = new ScreenMusteri(null, rootPaneCheckingEnabled);
-            f.setVisible(rootPaneCheckingEnabled);
-            SelectedMusteri = f.selectedMushteri;
-            d.setIdMusteri(em.find(Musteri.class, SelectedMusteri.getIdMusteri()));
-            em.persist(d);
-            em.getTransaction().begin();
-            em.getTransaction().commit();
-            if (SelectedMusteri.getIdMusteri() == null) {
-                Status = 3;
+        switch (jComboBox1.getSelectedIndex()) {
+            case 0: {
+                Status = 1;
+                Entity.Kassa d = new Kassa(0);
+                d.setTarix(sqlDate);
+                d.setBorc(Double.parseDouble("0"));
+                d.setMedaxil(Double.parseDouble(jTextField1.getText()));
+                d.setIdMusteri(em.find(Musteri.class, 1));
+                d.setIdSatisNovu((Satisnovu) jComboBox1.getSelectedItem());
+                d.setIdMember(em.find(Member.class, member.idMember));
+                em.persist(d);
+                em.getTransaction().begin();
+                em.getTransaction().commit();
+                this.dispose();
+                break;
             }
-            this.dispose();
+            case 1: {
+                Status = 2;
+                double borc = Double.parseDouble(jTextField1.getText()) - Double.parseDouble(jTextFieldNisyedenAlinanMebleg.getText());
+                Entity.Kassa d = new Kassa(0);
+                d.setTarix(sqlDate);
+                d.setBorc(borc);
+                d.setMedaxil(Double.parseDouble(jTextField1.getText()));
+                d.setIdSatisNovu((Satisnovu) jComboBox1.getSelectedItem());
+                d.setIdMember(em.find(Member.class, member.idMember));
+                ScreenMusteri f = new ScreenMusteri(null, rootPaneCheckingEnabled);
+                f.setVisible(rootPaneCheckingEnabled);
+                SelectedMusteri = f.selectedMushteri;
+                d.setIdMusteri(em.find(Musteri.class, SelectedMusteri.getIdMusteri()));
+                em.persist(d);
+                em.getTransaction().begin();
+                em.getTransaction().commit();
+                if (SelectedMusteri.getIdMusteri() == null) {
+                    Status = 3;
+                }
+                this.dispose();
+                break;
+            }
+            case 2: {
+                Status = 1;
+                Entity.Kassa d = new Kassa(0);
+                d.setTarix(sqlDate);
+                d.setBorc(Double.parseDouble("0"));
+                d.setMedaxil(Double.parseDouble(jTextField1.getText()));
+                d.setIdSatisNovu((Satisnovu) jComboBox1.getSelectedItem());
+                d.setIdMember(em.find(Member.class, member.idMember));
+                d.setIdMusteri(em.find(Musteri.class, 1));
+                em.persist(d);
+                em.getTransaction().begin();
+                em.getTransaction().commit();
+                this.dispose();
+                break;
+            }
+            default:
+                break;
         }
     }
 
@@ -169,6 +195,11 @@ public class ScreenChekout extends javax.swing.JDialog {
                 jButtonKassayaVurActionPerformed(evt);
             }
         });
+        jButtonKassayaVur.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jButtonKassayaVurKeyReleased(evt);
+            }
+        });
 
         jComboBox1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
@@ -204,7 +235,6 @@ public class ScreenChekout extends javax.swing.JDialog {
 
         jMenuNegd.setText("File");
 
-        jMenuItemNegd.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, 0));
         jMenuItemNegd.setText("Negd");
         jMenuItemNegd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -213,7 +243,6 @@ public class ScreenChekout extends javax.swing.JDialog {
         });
         jMenuNegd.add(jMenuItemNegd);
 
-        jMenuItemNisye.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, 0));
         jMenuItemNisye.setText("Nisye");
         jMenuItemNisye.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -282,11 +311,11 @@ public class ScreenChekout extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonKassayaVurActionPerformed
 
     private void jMenuItemNisyeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemNisyeActionPerformed
-        jComboBox1.setSelectedIndex(1);
-        jComboBox1.requestFocus();
-        jComboBox1.requestFocusInWindow();
-        jTextFieldNisyedenAlinanMebleg.setEnabled(true);
-        jTextFieldNisyedenAlinanMebleg.requestFocusInWindow();
+//        jComboBox1.setSelectedIndex(1);
+//        jComboBox1.requestFocus();
+//        jComboBox1.requestFocusInWindow();
+//        jTextFieldNisyedenAlinanMebleg.setEnabled(true);
+//        jTextFieldNisyedenAlinanMebleg.requestFocusInWindow();
     }//GEN-LAST:event_jMenuItemNisyeActionPerformed
 
     private void jTextFieldNisyedenAlinanMeblegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNisyedenAlinanMeblegActionPerformed
@@ -294,7 +323,7 @@ public class ScreenChekout extends javax.swing.JDialog {
     }//GEN-LAST:event_jTextFieldNisyedenAlinanMeblegActionPerformed
 
     private void jMenuItemNegdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemNegdActionPerformed
-        InsertData();
+//        InsertData();
     }//GEN-LAST:event_jMenuItemNegdActionPerformed
 
     private void jButtonImtinaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonImtinaActionPerformed
@@ -304,12 +333,49 @@ public class ScreenChekout extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonImtinaActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        if (evt.getID() == 1) {
-            jTextFieldNisyedenAlinanMebleg.setEnabled(true);
-        } else {
-            jTextFieldNisyedenAlinanMebleg.setEnabled(false);
-        }
+//        if (evt.getID() == 1) {
+//            jTextFieldNisyedenAlinanMebleg.setEnabled(true);
+//        } else {
+//            jTextFieldNisyedenAlinanMebleg.setEnabled(false);
+//        }
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jButtonKassayaVurKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButtonKassayaVurKeyReleased
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_1:
+                jTextFieldNisyedenAlinanMebleg.setEnabled(false);
+                jComboBox1.setSelectedIndex(0);
+                break;
+            case KeyEvent.VK_NUMPAD1:
+                jTextFieldNisyedenAlinanMebleg.setEnabled(false);
+                jComboBox1.setSelectedIndex(0);
+                break;
+            case KeyEvent.VK_2:
+                jTextFieldNisyedenAlinanMebleg.setEnabled(true);
+                jTextFieldNisyedenAlinanMebleg.requestFocusInWindow();
+                jComboBox1.setSelectedIndex(1);
+                break;
+            case KeyEvent.VK_NUMPAD2:
+                jTextFieldNisyedenAlinanMebleg.setEnabled(true);
+                jTextFieldNisyedenAlinanMebleg.requestFocusInWindow();
+                jComboBox1.setSelectedIndex(1);
+                break;
+            case KeyEvent.VK_3:
+                jTextFieldNisyedenAlinanMebleg.setEnabled(false);
+                jComboBox1.setSelectedIndex(2);
+                break;
+            case KeyEvent.VK_NUMPAD3:
+                jTextFieldNisyedenAlinanMebleg.setEnabled(false);
+                jComboBox1.setSelectedIndex(2);
+                break;
+            case KeyEvent.VK_CONTROL:
+            case KeyEvent.VK_ENTER:
+                    InsertData();
+                break;
+            default:
+                break;
+        }
+    }//GEN-LAST:event_jButtonKassayaVurKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -5,6 +5,8 @@
  */
 package Entity;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
@@ -19,6 +21,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -39,6 +42,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Mallar.findBySatisQiymeti", query = "SELECT m FROM Mallar m WHERE m.satisQiymeti = :satisQiymeti"),
     @NamedQuery(name = "Mallar.findByIsActive", query = "SELECT m FROM Mallar m WHERE m.isActive = :isActive")})
 public class Mallar implements Serializable {
+
+    @Transient
+    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -94,7 +100,9 @@ public class Mallar implements Serializable {
     }
 
     public void setIdMallar(Integer idMallar) {
+        Integer oldIdMallar = this.idMallar;
         this.idMallar = idMallar;
+        changeSupport.firePropertyChange("idMallar", oldIdMallar, idMallar);
     }
 
     public String getAd() {
@@ -102,7 +110,9 @@ public class Mallar implements Serializable {
     }
 
     public void setAd(String ad) {
+        String oldAd = this.ad;
         this.ad = ad;
+        changeSupport.firePropertyChange("ad", oldAd, ad);
     }
 
     public String getBarkod() {
@@ -110,7 +120,9 @@ public class Mallar implements Serializable {
     }
 
     public void setBarkod(String barkod) {
+        String oldBarkod = this.barkod;
         this.barkod = barkod;
+        changeSupport.firePropertyChange("barkod", oldBarkod, barkod);
     }
 
     public String getCekisi() {
@@ -118,7 +130,9 @@ public class Mallar implements Serializable {
     }
 
     public void setCekisi(String cekisi) {
+        String oldCekisi = this.cekisi;
         this.cekisi = cekisi;
+        changeSupport.firePropertyChange("cekisi", oldCekisi, cekisi);
     }
 
     public double getAlisQiymeti() {
@@ -126,7 +140,9 @@ public class Mallar implements Serializable {
     }
 
     public void setAlisQiymeti(double alisQiymeti) {
+        double oldAlisQiymeti = this.alisQiymeti;
         this.alisQiymeti = alisQiymeti;
+        changeSupport.firePropertyChange("alisQiymeti", oldAlisQiymeti, alisQiymeti);
     }
 
     public double getSatisQiymeti() {
@@ -134,7 +150,9 @@ public class Mallar implements Serializable {
     }
 
     public void setSatisQiymeti(double satisQiymeti) {
+        double oldSatisQiymeti = this.satisQiymeti;
         this.satisQiymeti = satisQiymeti;
+        changeSupport.firePropertyChange("satisQiymeti", oldSatisQiymeti, satisQiymeti);
     }
 
     public String getIsActive() {
@@ -142,7 +160,9 @@ public class Mallar implements Serializable {
     }
 
     public void setIsActive(String isActive) {
+        String oldIsActive = this.isActive;
         this.isActive = isActive;
+        changeSupport.firePropertyChange("isActive", oldIsActive, isActive);
     }
 
     @XmlTransient
@@ -159,7 +179,9 @@ public class Mallar implements Serializable {
     }
 
     public void setIdKateqoriya(Kateqoriya idKateqoriya) {
+        Kateqoriya oldIdKateqoriya = this.idKateqoriya;
         this.idKateqoriya = idKateqoriya;
+        changeSupport.firePropertyChange("idKateqoriya", oldIdKateqoriya, idKateqoriya);
     }
 
     @XmlTransient
@@ -194,6 +216,14 @@ public class Mallar implements Serializable {
     @Override
     public String toString() {
         return ad;
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.removePropertyChangeListener(listener);
     }
     
 }

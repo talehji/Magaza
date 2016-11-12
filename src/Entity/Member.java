@@ -28,13 +28,13 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "member")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Member.findAll", query = "SELECT m FROM Member m"),
-    @NamedQuery(name = "Member.findByIdMember", query = "SELECT m FROM Member m WHERE m.idMember = :idMember"),
-    @NamedQuery(name = "Member.findByAd", query = "SELECT m FROM Member m WHERE m.ad = :ad"),
-    @NamedQuery(name = "Member.findByIsActive", query = "SELECT m FROM Member m WHERE m.isActive = :isActive"),
-    @NamedQuery(name = "Member.findByPassword", query = "SELECT m FROM Member m WHERE m.password = :password"),
-    @NamedQuery(name = "Member.findBySoyad", query = "SELECT m FROM Member m WHERE m.soyad = :soyad"),
-    @NamedQuery(name = "Member.findByTelefon", query = "SELECT m FROM Member m WHERE m.telefon = :telefon")})
+    @NamedQuery(name = "Member.findAll", query = "SELECT m FROM Member m")
+    , @NamedQuery(name = "Member.findByIdMember", query = "SELECT m FROM Member m WHERE m.idMember = :idMember")
+    , @NamedQuery(name = "Member.findByAd", query = "SELECT m FROM Member m WHERE m.ad = :ad")
+    , @NamedQuery(name = "Member.findByIsActive", query = "SELECT m FROM Member m WHERE m.isActive = :isActive")
+    , @NamedQuery(name = "Member.findByPassword", query = "SELECT m FROM Member m WHERE m.password = :password")
+    , @NamedQuery(name = "Member.findBySoyad", query = "SELECT m FROM Member m WHERE m.soyad = :soyad")
+    , @NamedQuery(name = "Member.findByTelefon", query = "SELECT m FROM Member m WHERE m.telefon = :telefon")})
 public class Member implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -74,9 +74,9 @@ public class Member implements Serializable {
     public String getAd() {
         return ad;
     }
-
+    
     public String getAdSoyad() {
-        return ad+" "+soyad;
+        return ad + " " + soyad;
     }
 
     public void setAd(String ad) {
@@ -146,7 +146,7 @@ public class Member implements Serializable {
 
     @Override
     public String toString() {
-        return ad+" "+soyad;
+        return ad + " " + soyad;
     }
-    
+
 }

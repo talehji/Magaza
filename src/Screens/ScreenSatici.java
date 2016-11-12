@@ -12,6 +12,7 @@ import Entity.Mallar;
 import Entity.Member;
 import Entity.Musteri;
 import Entity.Satis;
+import Object.Members;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.util.List;
@@ -28,13 +29,14 @@ public class ScreenSatici extends javax.swing.JDialog {
 
     private final EntityManager em;
     private List<TableAdd> listofbaza;
-    private final Member member;
+    private final Members member;
+    private double sum = 0.00;
 
-    public ScreenSatici(java.awt.Frame parent, boolean modal, Member member) {
+    public ScreenSatici(java.awt.Frame parent, boolean modal, Members member) {
         super(parent, modal);
         initComponents();
         this.member = member;
-        jLabelIshchiAdi.setText(member.getAd() + " " + member.getSoyad());
+        jLabelIshchiAdi.setText(member.Ad + " " + member.Soyad);
 //        this.setExtendedState(ScreenSatici.MAXIMIZED_BOTH);
         Toolkit d = Toolkit.getDefaultToolkit();
         int x = (int) d.getScreenSize().getWidth();
@@ -64,7 +66,7 @@ public class ScreenSatici extends javax.swing.JDialog {
         jTable1.setAutoResizeMode(jTable1.AUTO_RESIZE_ALL_COLUMNS);
         jTable1.setRowHeight(24);
         jTable1.setFont(new Font("Tahoma", Font.BOLD, 18));
-        
+
         listofbaza = Baza.ListOfTable;
 
         for (TableAdd b : listofbaza) {
@@ -85,7 +87,6 @@ public class ScreenSatici extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel3 = new javax.swing.JLabel();
         jTextFieldCemQiymet = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -93,9 +94,7 @@ public class ScreenSatici extends javax.swing.JDialog {
         jTextFieldBarkod = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jLabelIshchiAdi = new javax.swing.JLabel();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
+        jLabelError = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -149,13 +148,10 @@ public class ScreenSatici extends javax.swing.JDialog {
         jLabelIshchiAdi.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabelIshchiAdi.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
-        jMenu1.setText("File");
-        jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
-
-        setJMenuBar(jMenuBar1);
+        jLabelError.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabelError.setForeground(new java.awt.Color(204, 0, 0));
+        jLabelError.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabelError.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -164,14 +160,16 @@ public class ScreenSatici extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 795, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jTextFieldBarkod, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelError)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 243, Short.MAX_VALUE)
                         .addComponent(jLabelIshchiAdi, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -181,15 +179,17 @@ public class ScreenSatici extends javax.swing.JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelIshchiAdi, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTextFieldBarkod, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jTextFieldBarkod, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabelIshchiAdi, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabelError, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jTextFieldCemQiymet, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -231,7 +231,7 @@ public class ScreenSatici extends javax.swing.JDialog {
                         f.setIdKassa(em.find(Kassa.class, a));
                         f.setIdMallar(em.find(Mallar.class, t.id));
                         ScreenChekout r = new ScreenChekout(null, rootPaneCheckingEnabled, member);
-                        f.setIdMusteri(em.find(Musteri.class, r.SelectedMusteri.getIdMusteri()));
+                        f.setIdMusteri(em.find(Musteri.class, ScreenChekout.SelectedMusteri.getIdMusteri()));
                         em.persist(f);
                         em.getTransaction().begin();
                         em.getTransaction().commit();
@@ -246,21 +246,26 @@ public class ScreenSatici extends javax.swing.JDialog {
             FillTheTableDaxil();
 
         } else {
-            List< Mallar> ListOfMallar = em.createNamedQuery("Mallar.findAll", Mallar.class).getResultList();
-            for (Mallar mallar : ListOfMallar) {
-                if (mallar.getBarkod().equals(jTextFieldBarkod.getText())) {
-                    Baza.ListOfTable.add(new TableAdd(mallar.getIdMallar(), mallar.getAd(), mallar.getSatisQiymeti()));
-                }
+            try {
+                Mallar mallar = em.createNamedQuery("Mallar.findByBarkod", Mallar.class)
+                        .setParameter("barkod", jTextFieldBarkod.getText())
+                        .getSingleResult();
+                sum = sum + mallar.getSatisQiymeti();
+                Baza.ListOfTable.add(new TableAdd(mallar.getIdMallar(), mallar.getAd(), mallar.getSatisQiymeti()));
+                jLabelError.setText(null);
+            } catch (Exception e) {
+                jLabelError.setText("Belə barkod tapılmadı!");
             }
-            int i;
-            double sum = 0;
-            for (i = 0; i < Baza.ListOfTable.size(); i++) {
-                sum += Baza.ListOfTable.get(i).Qiymet;
-            }
+
+//            for (i = 0; i < Baza.ListOfTable.size(); i++) {
+//                sum = sum + Baza.ListOfTable.get(i).Qiymet;
+//            }
             jTextFieldCemQiymet.setText("" + sum);
             FillTheTableDaxil();
             jTextFieldBarkod.setText(null);
         }
+        jTable1.setRowSelectionInterval(Baza.ListOfTable.size() - 1, Baza.ListOfTable.size() - 1);
+
     }//GEN-LAST:event_jTextFieldBarkodActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -273,11 +278,8 @@ public class ScreenSatici extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    public javax.swing.JLabel jLabel3;
+    public javax.swing.JLabel jLabelError;
     public javax.swing.JLabel jLabelIshchiAdi;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextFieldBarkod;
